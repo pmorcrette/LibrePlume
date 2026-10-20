@@ -1,0 +1,145 @@
+{
+  "extName": {
+    "message": "LibrePlume — correcteur"
+  },
+  "extDescription": {
+    "message": "Correcteur grammatical, orthographique, typographique et stylistique libre, relié à votre serveur LibrePlume."
+  },
+  "commandCheck": {
+    "message": "Vérifier le champ de texte actif"
+  },
+  "menuCheck": {
+    "message": "Vérifier « %s » avec LibrePlume"
+  },
+  "menuConjugate": {
+    "message": "Conjuguer « %s »"
+  },
+  "issues": {
+    "message": "suggestions"
+  },
+  "noIssues": {
+    "message": "Aucune faute détectée"
+  },
+  "checking": {
+    "message": "Analyse…"
+  },
+  "serverError": {
+    "message": "Serveur LibrePlume injoignable. Vérifiez l’adresse dans les options."
+  },
+  "ignore": {
+    "message": "Ignorer"
+  },
+  "addWord": {
+    "message": "Ajouter au dictionnaire"
+  },
+  "remove": {
+    "message": "supprimer"
+  },
+  "close": {
+    "message": "Fermer"
+  },
+  "fixAll": {
+    "message": "Tout corriger"
+  },
+  "check": {
+    "message": "Vérifier"
+  },
+  "copy": {
+    "message": "Copier"
+  },
+  "copied": {
+    "message": "Copié !"
+  },
+  "placeholder": {
+    "message": "Collez un texte à vérifier…"
+  },
+  "openApp": {
+    "message": "Ouvrir LibrePlume"
+  },
+  "conjugate": {
+    "message": "Conjuguer"
+  },
+  "conjPlaceholder": {
+    "message": "Verbe à conjuguer"
+  },
+  "options": {
+    "message": "Options"
+  },
+  "connected": {
+    "message": "Connecté à"
+  },
+  "optTitle": {
+    "message": "Options de LibrePlume"
+  },
+  "optServer": {
+    "message": "Adresse du serveur"
+  },
+  "optServerHelp": {
+    "message": "L’adresse de votre instance LibrePlume, par exemple http://localhost:8080."
+  },
+  "optToken": {
+    "message": "Jeton d’accès (facultatif)"
+  },
+  "optTokenHelp": {
+    "message": "Nécessaire seulement si le serveur définit LIBREPLUME_TOKEN et que vous ajoutez des mots au dictionnaire."
+  },
+  "optLanguage": {
+    "message": "Langue des textes"
+  },
+  "optAuto": {
+    "message": "Détection automatique"
+  },
+  "optAutoCheck": {
+    "message": "Vérifier automatiquement pendant la frappe"
+  },
+  "optStyle": {
+    "message": "Afficher les suggestions de style"
+  },
+  "optExcluded": {
+    "message": "Sites exclus (un nom de domaine par ligne)"
+  },
+  "optTest": {
+    "message": "Tester la connexion"
+  },
+  "optSave": {
+    "message": "Enregistrer"
+  },
+  "optSaved": {
+    "message": "Options enregistrées"
+  },
+  "optPermission": {
+    "message": "Autoriser l’accès aux sites"
+  },
+  "optPermissionHelp": {
+    "message": "Firefox demande votre accord pour que LibrePlume puisse lire les champs de texte des pages et contacter votre serveur."
+  },
+  "optOk": {
+    "message": "Connexion réussie : LibrePlume $VERSION$",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "optPrivacy": {
+    "message": "Les textes sont envoyés uniquement au serveur indiqué ci-dessus, jamais ailleurs."
+  },
+  "cat_spelling": {
+    "message": "Orthographe"
+  },
+  "cat_grammar": {
+    "message": "Grammaire"
+  },
+  "cat_conjugation": {
+    "message": "Conjugaison"
+  },
+  "cat_typography": {
+    "message": "Typographie"
+  },
+  "cat_punctuation": {
+    "message": "Ponctuation"
+  },
+  "cat_style": {
+    "message": "Style"
+  }
+}

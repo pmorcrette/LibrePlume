@@ -1,0 +1,107 @@
+/* LibrePlume content script UI. Prefixed classes and `all: initial` keep page styles out. */
+
+::highlight(libreplume-spelling) { text-decoration: underline wavy #e5484d; text-decoration-skip-ink: none; }
+::highlight(libreplume-grammar) { text-decoration: underline wavy #f08c00; text-decoration-skip-ink: none; }
+::highlight(libreplume-conjugation) { text-decoration: underline wavy #d6409f; text-decoration-skip-ink: none; }
+::highlight(libreplume-typography) { text-decoration: underline wavy #0091ff; text-decoration-skip-ink: none; }
+::highlight(libreplume-punctuation) { text-decoration: underline wavy #12a594; text-decoration-skip-ink: none; }
+::highlight(libreplume-style) { text-decoration: underline dotted #8e4ec6; text-decoration-skip-ink: none; }
+
+.libreplume-badge, .libreplume-panel {
+  all: initial;
+  --lp-bg: #fffdf9;
+  --lp-fg: #24211d;
+  --lp-muted: #6f675c;
+  --lp-soft: #efeae2;
+  --lp-line: #e2dbd0;
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  font: 14px/1.45 "Inter", "Segoe UI", system-ui, -apple-system, sans-serif !important;
+  color: var(--lp-text, var(--lp-fg)) !important;
+  box-sizing: border-box !important;
+}
+
+.libreplume-badge {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  padding: 0 6px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .22) !important;
+  transition: transform .15s ease !important;
+  user-select: none !important;
+}
+.libreplume-badge[hidden] { display: none !important; }
+.libreplume-badge:hover { transform: scale(1.1) !important; }
+.libreplume-badge.lp-ok { background: var(--lp-punctuation, #12a594) !important; }
+.libreplume-badge.lp-hint { background: var(--lp-style, #8e4ec6) !important; }
+.libreplume-badge.lp-warning { background: var(--lp-grammar, #f08c00) !important; }
+.libreplume-badge.lp-error { background: var(--lp-spelling, #e5484d) !important; }
+.libreplume-badge.lp-busy { opacity: .6 !important; }
+
+.libreplume-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  max-height: min(460px, 70vh) !important;
+  background: var(--lp-surface, var(--lp-bg)) !important;
+  border: 1px solid var(--lp-border, var(--lp-line)) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 12px 40px -8px rgba(0, 0, 0, .35) !important;
+  overflow: hidden !important;
+}
+.libreplume-panel * { box-sizing: border-box !important; font-family: inherit !important; }
+
+.libreplume-panel .lp-head {
+  display: flex !important; align-items: center !important; gap: 8px !important;
+  padding: 10px 10px 10px 14px !important; border-bottom: 1px solid var(--lp-border, var(--lp-line)) !important;
+}
+.libreplume-panel .lp-title { font-weight: 700 !important; color: var(--lp-accent, #4f46e5) !important; }
+.libreplume-panel .lp-count { color: var(--lp-text-muted, var(--lp-muted)) !important; font-size: 12px !important; margin-right: auto !important; }
+.libreplume-panel .lp-body { overflow-y: auto !important; padding: 8px !important; display: grid !important; gap: 6px !important; }
+.libreplume-panel .lp-empty { padding: 16px !important; text-align: center !important; color: var(--lp-text-muted, var(--lp-muted)) !important; }
+
+.libreplume-panel button {
+  all: unset; cursor: pointer !important; font: inherit !important; box-sizing: border-box !important;
+}
+.libreplume-panel .lp-btn { padding: 4px 10px !important; border-radius: 999px !important; font-size: 12px !important; font-weight: 600 !important; }
+.libreplume-panel .lp-primary { background: var(--lp-accent, #4f46e5) !important; color: var(--lp-accent-contrast, #fff) !important; }
+.libreplume-panel .lp-close { font-size: 18px !important; line-height: 1 !important; color: var(--lp-text-muted, var(--lp-muted)) !important; padding: 2px 8px !important; }
+
+.libreplume-panel .lp-issue {
+  position: relative !important; padding: 9px 10px 9px 13px !important; border-radius: 9px !important;
+  background: var(--lp-surface-2, var(--lp-soft)) !important;
+}
+.libreplume-panel .lp-issue::before {
+  content: "" !important; position: absolute !important; left: 0 !important; top: 8px !important; bottom: 8px !important;
+  width: 3px !important; border-radius: 3px !important; background: var(--lp-c) !important;
+}
+.libreplume-panel .lp-spelling { --lp-c: var(--lp-spelling, #e5484d); }
+.libreplume-panel .lp-grammar { --lp-c: var(--lp-grammar, #f08c00); }
+.libreplume-panel .lp-conjugation { --lp-c: var(--lp-conjugation, #d6409f); }
+.libreplume-panel .lp-typography { --lp-c: var(--lp-typography, #0091ff); }
+.libreplume-panel .lp-punctuation { --lp-c: var(--lp-punctuation, #12a594); }
+.libreplume-panel .lp-style { --lp-c: var(--lp-style, #8e4ec6); }
+.libreplume-panel .lp-cat { font-size: 10px !important; font-weight: 700 !important; letter-spacing: .06em !important; text-transform: uppercase !important; color: var(--lp-c) !important; }
+.libreplume-panel .lp-msg { margin: 3px 0 6px !important; font-size: 13px !important; }
+.libreplume-panel .lp-fixes { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; align-items: center !important; }
+.libreplume-panel .lp-del { color: var(--lp-text-muted, var(--lp-muted)) !important; text-decoration: line-through !important; }
+.libreplume-panel .lp-sugg {
+  padding: 2px 9px !important; border-radius: 7px !important; font-weight: 600 !important;
+  background: var(--lp-surface, var(--lp-bg)) !important; border: 1px solid var(--lp-border, var(--lp-line)) !important;
+}
+.libreplume-panel .lp-sugg:hover:not(:disabled) { background: var(--lp-c) !important; color: #fff !important; border-color: transparent !important; }
+.libreplume-panel .lp-actions { display: flex !important; gap: 12px !important; margin-top: 6px !important; }
+.libreplume-panel .lp-link { font-size: 11px !important; color: var(--lp-text-muted, var(--lp-muted)) !important; }
+.libreplume-panel .lp-link:hover { color: var(--lp-accent, #4f46e5) !important; text-decoration: underline !important; }
+
+@media (prefers-color-scheme: dark) {
+  .libreplume-badge, .libreplume-panel {
+    --lp-bg: #1c1d24; --lp-fg: #e9e7e2; --lp-muted: #9a978f; --lp-soft: #25262f; --lp-line: #30323d;
+  }
+}

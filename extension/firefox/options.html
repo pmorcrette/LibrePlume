@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="ui.css">
+  <style>
+    body { max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    form { display: grid; gap: 1.1rem; }
+    label { display: grid; gap: .35rem; font-weight: 600; }
+    label small { font-weight: 400; color: var(--text-muted); }
+    .check { display: flex; gap: .6rem; align-items: center; font-weight: 500; }
+    .row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    #result { font-size: .9rem; }
+    textarea { min-height: 5rem; font-family: ui-monospace, monospace; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1><img src="icons/icon.svg" alt=""><span data-msg="optTitle"></span></h1>
+    <p class="muted" data-msg="optPrivacy"></p>
+    <form id="form">
+      <label><span data-msg="optServer"></span>
+        <input type="url" id="server" required placeholder="http://localhost:8080">
+        <small data-msg="optServerHelp"></small>
+      </label>
+      <label><span data-msg="optToken"></span>
+        <input type="password" id="token" autocomplete="off">
+        <small data-msg="optTokenHelp"></small>
+      </label>
+      <label><span data-msg="optLanguage"></span>
+        <select id="language">
+          <option value="auto" data-msg="optAuto"></option>
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+      <span class="check"><input type="checkbox" id="autoCheck"> <span data-msg="optAutoCheck"></span></span>
+      <span class="check"><input type="checkbox" id="showStyle"> <span data-msg="optStyle"></span></span>
+      <label><span data-msg="optExcluded"></span>
+        <textarea id="excluded" placeholder="docs.google.com"></textarea>
+      </label>
+      <div class="row">
+        <button class="btn primary" type="submit" data-msg="optSave"></button>
+        <button class="btn ghost" type="button" id="test" data-msg="optTest"></button>
+        <button class="btn ghost" type="button" id="permission" data-msg="optPermission"></button>
+        <span id="result" class="muted" role="status"></span>
+      </div>
+      <small class="muted" data-msg="optPermissionHelp"></small>
+    </form>
+  </div>
+  <script src="common.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

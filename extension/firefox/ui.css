@@ -1,0 +1,34 @@
+/* Shared styles of the popup and options pages (colours follow the server theme). */
+:root {
+  --bg: #f6f3ee; --surface: #fffdf9; --surface-2: #efeae2; --border: #e2dbd0;
+  --text: #24211d; --text-muted: #6f675c; --accent: #4f46e5; --accent-contrast: #fff;
+  --spelling: #e5484d; --grammar: #f08c00; --conjugation: #d6409f; --typography: #0091ff; --punctuation: #12a594; --style: #8e4ec6;
+  --font-ui: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-text: "Literata", "Iowan Old Style", Georgia, serif;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #14151a; --surface: #1c1d24; --surface-2: #25262f; --border: #30323d; --text: #e9e7e2; --text-muted: #9a978f; --accent: #e2b553; --accent-contrast: #1b1708; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 var(--font-ui); }
+h1 { font-size: 1.05rem; margin: 0; display: flex; align-items: center; gap: .5rem; }
+h1 img { width: 22px; height: 22px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.btn { border: 1px solid transparent; border-radius: 999px; padding: .45rem .9rem; font-weight: 600; cursor: pointer; background: transparent; }
+.btn.primary { background: var(--accent); color: var(--accent-contrast); }
+.btn.ghost { border-color: var(--border); }
+.btn:hover { filter: brightness(1.05); }
+input[type="text"], input[type="url"], input[type="password"], select, textarea {
+  width: 100%; background: var(--surface-2); border: 1px solid transparent; border-radius: calc(var(--radius) * .6); padding: .5rem .7rem;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+.muted { color: var(--text-muted); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+.issue { position: relative; padding: .6rem .7rem .6rem .85rem; border-radius: 9px; background: var(--surface-2); }
+.issue::before { content: ""; position: absolute; left: 0; top: .5rem; bottom: .5rem; width: 3px; border-radius: 3px; background: var(--c); }
+.issue .cat { font-size: .65rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--c); }
+.issue .msg { margin: .2rem 0 .35rem; font-size: .85rem; }
+.issue del { color: var(--text-muted); margin-right: .3rem; }
+.sugg { border: 1px solid var(--border); background: var(--surface); border-radius: 7px; padding: .1rem .55rem; font-weight: 600; cursor: pointer; margin: 0 .25rem .25rem 0; }
+.sugg:hover { background: var(--c); color: #fff; border-color: transparent; }
