@@ -1,0 +1,17 @@
+[package]
+name = "libreplume-server"
+description = "LibrePlume HTTP server, web interface and MCP endpoint"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "libreplume"
+path = "src/main.rs"
+
+[dependencies]
+libreplume-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
