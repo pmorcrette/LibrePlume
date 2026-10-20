@@ -1,12 +1,14 @@
 //! LibrePlume server: REST API, MCP endpoint and embedded web interface.
 
 pub mod api;
+pub mod mcp;
 pub mod service;
 pub mod store;
 pub mod themes;
 pub mod web;
 
 use axum::http::{header, HeaderValue, Method};
+use axum::routing::post;
 use axum::Router;
 use service::AppState;
 use tower_http::compression::CompressionLayer;
@@ -25,9 +27,13 @@ pub fn app(state: AppState) -> Router {
             header::AUTHORIZATION,
             header::ACCEPT,
             "x-api-key".parse().unwrap(),
-        ]);
+            "mcp-session-id".parse().unwrap(),
+            "mcp-protocol-version".parse().unwrap(),
+        ])
+        .expose_headers(["mcp-session-id".parse().unwrap()]);
     Router::new()
         .merge(api::router())
+        .route("/mcp", post(mcp::http_post).get(mcp::http_get).delete(mcp::http_delete))
         .fallback(web::serve)
         .layer(axum::middleware::from_fn_with_state(state.clone(), api::auth))
         .layer(RequestBodyLimitLayer::new(4 * 1024 * 1024))

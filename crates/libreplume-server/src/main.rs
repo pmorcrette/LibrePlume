@@ -29,6 +29,8 @@ enum Command {
         #[arg(long, env = "LIBREPLUME_MAX_TEXT_CHARS", default_value_t = 200_000)]
         max_text_chars: usize,
     },
+    /// Run an MCP server over stdio (for local AI agents).
+    Mcp,
     /// Check files (or stdin with "-") and print the issues.
     Check {
         files: Vec<PathBuf>,
@@ -69,6 +71,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let listener = tokio::net::TcpListener::bind((host.as_str(), port)).await?;
             tracing::info!("LibrePlume {} listening on http://{}", libreplume_core::VERSION, listener.local_addr()?);
             axum::serve(listener, libreplume_server::app(state)).with_graceful_shutdown(shutdown()).await?;
+        }
+        Command::Mcp => {
+            let store = Store::open(Some(&cli.data_dir))?;
+            let state = AppState { store: Arc::new(store), config: Arc::new(Config::default()) };
+            libreplume_server::mcp::serve_stdio(state).await?;
         }
         Command::Check { files, language } => {
             let store = Store::open(Some(&cli.data_dir)).unwrap_or_else(|_| Store::in_memory());
