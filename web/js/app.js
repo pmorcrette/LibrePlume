@@ -3,12 +3,13 @@
 import { apply, lang, setLang } from './i18n.js';
 import * as checker from './checker.js';
 import * as conjugator from './conjugator.js';
+import * as synonyms from './synonyms.js';
 import * as settings from './settings.js';
 import * as themes from './themes.js';
 import * as docs from './docs.js';
 
-const views = { check: checker, conjugate: conjugator, rules: settings, themes, api: docs };
-const routes = { '': 'check', conjugate: 'conjugate', conjugueur: 'conjugate', rules: 'rules', themes: 'themes', api: 'api' };
+const views = { check: checker, conjugate: conjugator, synonyms, rules: settings, themes, api: docs };
+const routes = { '': 'check', conjugate: 'conjugate', conjugueur: 'conjugate', synonyms: 'synonyms', synonymes: 'synonyms', rules: 'rules', themes: 'themes', api: 'api' };
 const started = new Set();
 
 let toastTimer;

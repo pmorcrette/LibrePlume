@@ -45,6 +45,7 @@ const ENDPOINTS = [
   ['POST /api/check', '{ text, language?, categories?, disabled_rules?, enabled_rules? }'],
   ['POST /api/correct', '{ text, language?, categories? }'],
   ['GET /api/conjugate/{verb}?language=fr', ''],
+  ['GET /api/synonyms/{word}?language=fr', ''],
   ['GET /api/rules', '?language=fr&category=grammar'],
   ['PUT /api/rules/{id}', '{ enabled }'],
   ['GET | PATCH /api/settings', '{ default_language, max_sentence_words, disabled_categories, default_theme }'],
@@ -56,7 +57,7 @@ const ENDPOINTS = [
   ['POST /mcp', 'Model Context Protocol (JSON-RPC)'],
 ];
 
-const TOOLS = ['check_text', 'correct_text', 'conjugate_verb', 'list_rules', 'set_rule_enabled', 'get_settings', 'update_settings',
+const TOOLS = ['check_text', 'correct_text', 'conjugate_verb', 'find_synonyms', 'list_rules', 'set_rule_enabled', 'get_settings', 'update_settings',
   'list_dictionary', 'add_dictionary_words', 'remove_dictionary_words', 'list_themes', 'save_theme', 'delete_theme', 'server_info'];
 
 function code(text) {

@@ -382,3 +382,28 @@ dialog::backdrop { background: color-mix(in srgb, #000 40%, transparent); backdr
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ------------------------------------------------------------------ Synonyms */
+
+.syn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: .85rem; }
+.syn-meaning h3 { margin: 0 0 .7rem; font-size: .9rem; display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; }
+.syn-meaning h3 small { color: var(--text-muted); font-weight: 500; font-size: .75rem; }
+.syn-words { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+.syn-word {
+  display: inline-block; padding: .2rem .65rem; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font: 500 .95rem var(--font-text); text-decoration: none; cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.syn-word:hover { background: var(--accent); color: var(--accent-contrast); border-color: transparent; }
+.syn-word.antonym { border-style: dashed; color: var(--text-muted); }
+.syn-antonyms { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .8rem; padding-top: .7rem; border-top: 1px dashed var(--border); }
+.syn-label { font-size: .8rem; }
+.syn-card {
+  margin-bottom: .75rem; padding: .8rem .9rem; border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  display: grid; gap: .55rem; animation: rise .25s var(--ease) both;
+}
+.syn-card p { margin: 0; font-size: .85rem; }
+.syn-card-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-size: .9rem; }
+.syn-close { font-size: 1.1rem; line-height: 1; }
+.syn-card > .link-btn { justify-self: start; text-decoration: none; }

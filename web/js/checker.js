@@ -3,6 +3,7 @@
 import { api } from './api.js';
 import { h, escapeHtml, toast } from './app.js';
 import { t } from './i18n.js';
+import { link as synonymsLink, wordLinks } from './synonyms.js';
 
 const CATEGORIES = ['spelling', 'grammar', 'conjugation', 'typography', 'punctuation', 'style'];
 const DEBOUNCE_MS = 450;
@@ -42,6 +43,8 @@ export function init() {
 
   input.addEventListener('input', onInput);
   input.addEventListener('click', syncActiveFromCaret);
+  input.addEventListener('dblclick', showSynonymsForSelection);
+  input.addEventListener('keyup', (e) => { if (e.shiftKey && e.key.startsWith('Arrow')) showSynonymsForSelection(); });
   input.addEventListener('keyup', (e) => { if (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End') syncActiveFromCaret(); });
   window.addEventListener('resize', autosize);
   langSelect.addEventListener('change', () => { store.set('lp.checkLang', langSelect.value); runCheck(); });
@@ -209,8 +212,8 @@ function renderList() {
   const matches = visibleMatches();
   if (!matches.length) {
     list.replaceChildren(state.text.trim() && state.checkedText === state.text
-      ? h('li', { class: 'empty-state' }, svgIcon('icon-check'), h('p', {}, t('check.perfect')))
-      : '');
+      ? h('li', { class: 'empty-state' }, svgIcon('icon-check'), h('p', {}, t('check.perfect')), h('p', { class: 'muted' }, t('syn.hint')))
+      : h('li', { class: 'empty-state' }, h('p', { class: 'muted' }, t('syn.hint'))));
     return;
   }
   list.replaceChildren(...matches.map((m) => {
@@ -278,6 +281,52 @@ function syncActiveFromCaret() {
 }
 
 /** Replaces a range through the editing commands so that undo keeps working. */
+// ------------------------------------------------------------------ synonyms of the selected word
+
+const WORD = /^[\p{L}][\p{L}'’-]{0,39}$/u;
+let synonymRequest = 0;
+
+/** Shows the synonyms of the selected word above the suggestions, to replace it in one click. */
+async function showSynonymsForSelection() {
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const word = input.value.slice(start, end).trim();
+  const card = document.getElementById('syn-card');
+  if (!WORD.test(word) || word.length < 2) return;
+  const offset = start + input.value.slice(start, end).indexOf(word);
+  const chosen = document.getElementById('check-lang').value;
+  const lang = chosen !== 'auto' ? chosen : state.language || 'fr';
+  const request = ++synonymRequest;
+  let result;
+  try {
+    result = await api.get(`/api/synonyms/${encodeURIComponent(word)}?language=${lang}`);
+  } catch (_) {
+    result = null;
+  }
+  if (request !== synonymRequest) return;
+  const close = h('button', { class: 'link-btn syn-close', type: 'button', 'aria-label': '×', onclick: () => card.replaceChildren() }, '×');
+  if (!result) {
+    card.replaceChildren(h('div', { class: 'syn-card' }, h('div', { class: 'syn-card-head' }, h('strong', {}, t('syn.of', word)), close),
+      h('p', { class: 'muted' }, t('syn.none', word))));
+    return;
+  }
+  const words = [];
+  for (const m of result.meanings) for (const s of m.synonyms) if (!words.includes(s)) words.push(s);
+  const pick = (synonym) => {
+    if (input.value.slice(offset, offset + word.length) !== word) return;
+    const replacement = word[0] === word[0].toUpperCase() ? synonym[0].toUpperCase() + synonym.slice(1) : synonym;
+    replaceRange(offset, offset + word.length, replacement);
+    input.setSelectionRange(offset, offset + replacement.length);
+    toast(t('syn.replaced', word, replacement));
+    card.replaceChildren();
+  };
+  card.replaceChildren(h('div', { class: 'syn-card' },
+    h('div', { class: 'syn-card-head' }, h('strong', {}, t('syn.of', word)), close),
+    result.lemma.toLowerCase() !== word.toLowerCase() ? h('p', { class: 'muted' }, t('syn.lemma', result.lemma)) : null,
+    wordLinks(words, result.language, { shown: 14, onPick: pick }),
+    h('a', { class: 'link-btn', href: synonymsLink(result.lemma, result.language) }, t('syn.lookup'))));
+}
+
 function replaceRange(start, end, text) {
   input.focus({ preventScroll: true });
   input.setSelectionRange(start, end);

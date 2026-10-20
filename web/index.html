@@ -31,6 +31,7 @@
     <nav class="tabs" aria-label="Navigation">
       <a href="#/" data-route="check" data-i18n="nav.check">Correcteur</a>
       <a href="#/conjugate" data-route="conjugate" data-i18n="nav.conjugate">Conjugueur</a>
+      <a href="#/synonyms" data-route="synonyms" data-i18n="nav.synonyms">Synonymes</a>
       <a href="#/rules" data-route="rules" data-i18n="nav.rules">Réglages</a>
       <a href="#/themes" data-route="themes" data-i18n="nav.themes">Thèmes</a>
       <a href="#/api" data-route="api" data-i18n="nav.api">API &amp; MCP</a>
@@ -95,6 +96,7 @@
             </div>
           </div>
           <div class="chips" id="category-filter" role="group" aria-label="Filtrer par catégorie"></div>
+          <div id="syn-card" aria-live="polite"></div>
           <ol class="issues" id="issues" aria-live="polite"></ol>
         </aside>
       </div>
@@ -114,6 +116,22 @@
       </form>
       <div class="conj-suggestions" id="conj-examples"></div>
       <div id="conj-result" aria-live="polite"></div>
+    </section>
+
+    <!-- Synonyms -->
+    <section class="view" data-view="synonyms" hidden>
+      <form class="card conj-search" id="syn-form" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-search"/></svg>
+        <input id="syn-input" type="search" required autocomplete="off" spellcheck="false"
+          data-i18n-placeholder="syn.placeholder" placeholder="Un mot : rapide, beau, travail…" aria-label="Mot">
+        <select id="syn-lang" aria-label="Langue">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+        <button class="btn primary" type="submit" data-i18n="syn.submit">Chercher</button>
+      </form>
+      <div class="conj-suggestions" id="syn-examples"></div>
+      <div id="syn-result" aria-live="polite"></div>
     </section>
 
     <!-- Rules & settings -->
