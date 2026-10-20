@@ -1,0 +1,10 @@
+{
+  "name": "LibrePlume",
+  "short_name": "LibrePlume",
+  "description": "Correcteur grammatical, orthographique et stylistique libre",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f3ee",
+  "theme_color": "#4f46e5",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
