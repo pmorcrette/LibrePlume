@@ -19,7 +19,8 @@ pub const PROTOCOL_VERSIONS: &[&str] = &["2025-06-18", "2025-03-26", "2024-11-05
 
 const INSTRUCTIONS: &str = "LibrePlume is a grammar, spelling, conjugation, typography and style checker for French \
 and English. Use `check_text` to list problems in a text (offsets are UTF-16 code units), `correct_text` to get an \
-automatically corrected version, and `conjugate_verb` for conjugation tables. Administration tools manage which \
+automatically corrected version, `conjugate_verb` for conjugation tables and `find_synonyms` for synonyms and \
+antonyms. Administration tools manage which \
 rules are active, the shared custom dictionary, default settings and the web interface themes. Style findings are \
 suggestions: review them rather than applying them blindly.";
 
@@ -87,6 +88,17 @@ pub fn tools() -> Vec<Value> {
                     "tenses": { "type": "array", "items": { "type": "string" }, "description": "Optional filter on tense ids such as « present », « imparfait », « passe_compose »." },
                 },
                 "required": ["verb"],
+            }), true, false),
+        tool("find_synonyms", "Find synonyms",
+            "Synonyms and antonyms of a French or English word, grouped by meaning, most common sense first. Inflected forms are looked up through their base form (« mangeaient » → « manger »): check `lemma` in the result, since synonyms are given in base form.",
+            json!({
+                "type": "object",
+                "properties": {
+                    "word": { "type": "string", "description": "A word or short expression." },
+                    "language": { "type": "string", "enum": ["fr", "en"], "description": "Default: server default, then French, then English." },
+                    "limit": { "type": "integer", "minimum": 1, "maximum": 200, "description": "Maximum synonyms per meaning (default 20)." },
+                },
+                "required": ["word"],
             }), true, false),
         tool("list_rules", "List rules",
             "List checking rules with their id, language, category, description and whether they are enabled on this server.",
@@ -370,6 +382,16 @@ async fn call_tool(state: &AppState, name: &str, args: &Value) -> Result<Value, 
                 }
             }
             conj
+        }
+        "find_synonyms" => {
+            let word = arg_str(args, "word")?.to_string();
+            let limit = args["limit"].as_u64().unwrap_or(20).clamp(1, 200) as usize;
+            let mut found = service::synonyms(&state.store, word, language).await?;
+            for m in &mut found.meanings {
+                m.synonyms.truncate(limit);
+                m.antonyms.truncate(limit);
+            }
+            json!(found)
         }
         "list_rules" => {
             let category = args

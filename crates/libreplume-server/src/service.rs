@@ -4,7 +4,7 @@ use crate::store::{RequestOverrides, Store, StoreError};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::Json;
-use libreplume_core::{Category, CheckResult, Conjugation, Correction, Language, RuleInfo};
+use libreplume_core::{Category, CheckResult, Conjugation, Correction, Language, RuleInfo, Synonyms};
 use serde::Serialize;
 use serde_json::json;
 use std::collections::HashSet;
@@ -119,6 +119,25 @@ pub async fn conjugate(verb: String, language: Option<Language>) -> Result<Conju
         .map_err(|e| ApiError::not_found(e.to_string()))
 }
 
+/// Synonyms of a word. Without a language, the server default is used, then French and
+/// English are tried in turn (a single word is too short to detect its language).
+pub async fn synonyms(store: &Store, word: String, language: Option<Language>) -> Result<Synonyms, ApiError> {
+    let word = word.trim().to_string();
+    if word.is_empty() || word.chars().count() > 80 {
+        return Err(ApiError::bad_request("give a single word or short expression (at most 80 characters)"));
+    }
+    let candidates: Vec<Language> = match language.or(store.settings().default_language) {
+        Some(l) if language.is_some() => vec![l],
+        Some(l) => std::iter::once(l).chain(Language::ALL.into_iter().filter(|x| *x != l)).collect(),
+        None => Language::ALL.to_vec(),
+    };
+    let query = word.clone();
+    tokio::task::spawn_blocking(move || candidates.into_iter().find_map(|l| libreplume_core::synonyms(&query, l)))
+        .await
+        .map_err(|e| ApiError { status: StatusCode::INTERNAL_SERVER_ERROR, message: e.to_string() })?
+        .ok_or_else(|| ApiError::not_found(format!("no synonyms found for « {word} »")))
+}
+
 #[derive(Debug, Serialize)]
 pub struct RuleView {
     #[serde(flatten)]
@@ -152,6 +171,7 @@ pub fn info(state: &AppState) -> serde_json::Value {
         "endpoints": {
             "rest": "/api",
             "mcp": "/mcp",
+            "synonyms": "/api/synonyms/{word}",
             "languagetool": "/v2/check",
         },
     })

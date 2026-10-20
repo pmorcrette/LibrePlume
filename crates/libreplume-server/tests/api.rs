@@ -76,6 +76,27 @@ async fn check_conjugate_and_settings() {
 }
 
 #[tokio::test]
+async fn synonyms_endpoint_and_tool() {
+    let app = app(None);
+    let (s, v) = call(&app, "GET", "/api/synonyms/mangeaient?language=fr", None, None).await;
+    assert_eq!(s, StatusCode::OK);
+    assert_eq!(v["lemma"], "manger");
+    assert!(!v["meanings"][0]["synonyms"].as_array().unwrap().is_empty());
+    // Without a language, French then English are tried.
+    let (s, v) = call(&app, "GET", "/api/synonyms/happy", None, None).await;
+    assert_eq!(s, StatusCode::OK);
+    assert_eq!(v["language"], "en");
+    let (s, _) = call(&app, "GET", "/api/synonyms/zxqwv", None, None).await;
+    assert_eq!(s, StatusCode::NOT_FOUND);
+
+    let req = json!({ "jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": { "name": "find_synonyms", "arguments": { "word": "content", "language": "fr", "limit": 3 } } });
+    let (_, v) = call(&app, "POST", "/mcp", Some(req), None).await;
+    let syn = v["result"]["structuredContent"]["meanings"][0]["synonyms"].as_array().unwrap().clone();
+    assert_eq!(syn.len(), 3);
+    assert_eq!(syn[0], "heureux");
+}
+
+#[tokio::test]
 async fn themes_crud() {
     let app = app(None);
     let (_, v) = call(&app, "GET", "/api/themes", None, None).await;

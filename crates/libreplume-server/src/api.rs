@@ -21,6 +21,7 @@ pub fn router() -> Router<AppState> {
         .route("/api/correct", post(correct))
         .route("/api/conjugate", post(conjugate_post))
         .route("/api/conjugate/{verb}", get(conjugate_get))
+        .route("/api/synonyms/{word}", get(synonyms))
         .route("/api/rules", get(rules))
         .route("/api/rules/{id}", put(set_rule))
         .route("/api/settings", get(get_settings).put(put_settings).patch(put_settings))
@@ -119,6 +120,15 @@ struct ConjugateBody {
 async fn conjugate_get(Path(verb): Path<String>, Query(q): Query<LangQuery>) -> Result<Response, ApiError> {
     let lang = parse_language(q.language.as_deref())?.or(Some(Language::Fr));
     Ok(Json(service::conjugate(verb, lang).await?).into_response())
+}
+
+async fn synonyms(
+    State(state): State<AppState>,
+    Path(word): Path<String>,
+    Query(q): Query<LangQuery>,
+) -> Result<Response, ApiError> {
+    let lang = parse_language(q.language.as_deref())?;
+    Ok(Json(service::synonyms(&state.store, word, lang).await?).into_response())
 }
 
 async fn conjugate_post(Json(body): Json<ConjugateBody>) -> Result<Response, ApiError> {
