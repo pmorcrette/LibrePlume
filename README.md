@@ -45,6 +45,22 @@
 
 ## Quick start
 
+### Single binary
+
+LibrePlume is one self-contained executable: dictionaries and the web interface are built in.
+Download the archive for your system from the
+[latest release](https://github.com/pmorcrette/LibrePlume/releases/latest) (Linux x86-64/ARM64
+static binaries, macOS Intel/Apple Silicon, Windows), then:
+
+```sh
+tar xzf libreplume-*-x86_64-unknown-linux-musl.tar.gz
+cd libreplume-*/ && ./libreplume serve --port 8080 --data-dir ./data
+```
+
+Check the download against `SHA256SUMS` from the same release (`sha256sum -c SHA256SUMS --ignore-missing`).
+
+### Docker
+
 ```sh
 docker compose up -d --build  # builds the image and starts it on http://localhost:8080
 ```
@@ -207,6 +223,19 @@ crates/
 web/                   web interface (plain HTML/CSS/ES modules, embedded in the binary)
 extension/firefox/     Firefox add-on (Manifest V3)
 ```
+
+### Releasing
+
+Bump `version` in the root `Cargo.toml` (and `extension/firefox/manifest.json`), merge to `master`,
+then tag that commit:
+
+```sh
+git tag v0.2.0 && git push origin v0.2.0
+```
+
+The *Release* workflow checks that the tag is on `master` and matches the crate version, builds and
+smoke-tests the binaries for every platform, packages the Firefox extension and publishes them with
+checksums as a GitHub release. The *CI* workflow publishes the matching Docker image to GHCR.
 
 Rules are small functions over a tokenized text (see `crates/libreplume-core/src/rules`); fixed
 expressions live in tables in `rules/phrases.rs`, which is the easiest place to contribute.
