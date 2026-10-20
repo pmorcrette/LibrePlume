@@ -84,6 +84,14 @@ fn correct_english_text_has_no_errors() {
 }
 
 #[test]
+fn repetitions_suggest_synonyms() {
+    let r = check("Le paysage est magnifique et la mer est magnifique.", &opts(Language::Fr));
+    let m = r.matches.iter().find(|m| m.rule_id == "WORD_REPETITION").expect("repetition found");
+    assert_eq!(m.text, "magnifique");
+    assert!(!m.replacements.is_empty() && !m.replacements.contains(&"magnifique".to_string()));
+}
+
+#[test]
 fn user_dictionary_and_disabled_rules() {
     let mut o = opts(Language::Fr);
     assert!(check("Le zorglub arrive.", &o).matches.iter().any(|m| m.rule_id == "SPELLING"));

@@ -94,7 +94,8 @@ fn word_repetition(ctx: &Ctx<'_>, out: &mut Vec<Found>) {
                 }
                 Language::En => format!("“{}” is repeated nearby: a synonym would make the text flow better.", t.text),
             };
-            out.push(Found::new(Severity::Hint, msg, t.start..t.end, vec![]));
+            let synonyms = crate::thesaurus::replacements(t.text, ctx.lang, 5);
+            out.push(Found::new(Severity::Hint, msg, t.start..t.end, synonyms));
         }
         recent.push((w.clone(), position));
     }

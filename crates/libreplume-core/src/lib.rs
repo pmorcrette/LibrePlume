@@ -14,6 +14,7 @@ pub mod engine;
 pub mod resources;
 pub mod rules;
 pub mod text;
+pub mod thesaurus;
 pub mod types;
 
 pub use conjugation::{Conjugation, ConjugationError};
@@ -21,6 +22,7 @@ pub use engine::{
     check, conjugate, correct, detect_language, rules as list_rules, CheckOptions, CheckResult, Correction, Match,
     Stats,
 };
+pub use thesaurus::{synonyms, Meaning, Synonyms};
 pub use types::*;
 
 /// Crate version, exposed by the server.
