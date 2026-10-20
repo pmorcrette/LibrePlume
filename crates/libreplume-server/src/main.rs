@@ -31,6 +31,11 @@ enum Command {
     },
     /// Run an MCP server over stdio (for local AI agents).
     Mcp,
+    /// Exit with status 0 when the local server answers (used by the Docker health check).
+    Healthcheck {
+        #[arg(long, short, env = "LIBREPLUME_PORT", default_value_t = 8080)]
+        port: u16,
+    },
     /// Check files (or stdin with "-") and print the issues.
     Check {
         files: Vec<PathBuf>,
@@ -51,6 +56,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Logs go to stderr so that stdout stays clean for the MCP stdio transport.
     tracing_subscriber::fmt()
         .with_writer(std::io::stderr)
+        .with_ansi(std::io::IsTerminal::is_terminal(&std::io::stderr()))
         .with_env_filter(
             tracing_subscriber::EnvFilter::try_from_env("LIBREPLUME_LOG")
                 .unwrap_or_else(|_| "info,tower_http=info".into()),
@@ -76,6 +82,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let store = Store::open(Some(&cli.data_dir))?;
             let state = AppState { store: Arc::new(store), config: Arc::new(Config::default()) };
             libreplume_server::mcp::serve_stdio(state).await?;
+        }
+        Command::Healthcheck { port } => {
+            if !healthy(port) {
+                std::process::exit(1);
+            }
         }
         Command::Check { files, language } => {
             let store = Store::open(Some(&cli.data_dir)).unwrap_or_else(|_| Store::in_memory());
@@ -106,6 +117,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
     Ok(())
+}
+
+fn healthy(port: u16) -> bool {
+    use std::io::{Read, Write};
+    let addr = std::net::SocketAddr::from(([127, 0, 0, 1], port));
+    let Ok(mut stream) = std::net::TcpStream::connect_timeout(&addr, std::time::Duration::from_secs(2)) else {
+        return false;
+    };
+    let _ = stream.set_read_timeout(Some(std::time::Duration::from_secs(2)));
+    if stream.write_all(b"GET /api/health HTTP/1.0\r\nHost: localhost\r\n\r\n").is_err() {
+        return false;
+    }
+    let mut head = [0u8; 12];
+    stream.read_exact(&mut head).is_ok() && head.ends_with(b" 200")
 }
 
 async fn shutdown() {
