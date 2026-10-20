@@ -1,0 +1,17 @@
+services:
+  libreplume:
+    image: ghcr.io/pmorcrette/libreplume:latest
+    build: .
+    container_name: libreplume
+    ports:
+      - "8080:8080"
+    environment:
+      # Protects settings, dictionary, themes and the MCP endpoint. Set it on any shared server.
+      LIBREPLUME_TOKEN: ${LIBREPLUME_TOKEN:-}
+      LIBREPLUME_LOG: info
+    volumes:
+      - libreplume-data:/data
+    restart: unless-stopped
+
+volumes:
+  libreplume-data:
