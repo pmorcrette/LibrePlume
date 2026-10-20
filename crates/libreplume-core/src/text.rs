@@ -74,14 +74,11 @@ fn is_hspace(c: char) -> bool {
 }
 
 /// French elided forms that are split from the word they attach to.
-const FR_ELISIONS: &[&str] = &[
-    "l", "d", "j", "m", "t", "s", "n", "c", "ç", "qu", "jusqu", "lorsqu", "puisqu", "quoiqu",
-];
+const FR_ELISIONS: &[&str] =
+    &["l", "d", "j", "m", "t", "s", "n", "c", "ç", "qu", "jusqu", "lorsqu", "puisqu", "quoiqu"];
 
 /// Words containing an apostrophe that must stay whole.
-const FR_APOSTROPHE_WORDS: &[&str] = &[
-    "aujourd", "quelqu", "presqu", "prud", "entr", "grand", "main-d",
-];
+const FR_APOSTROPHE_WORDS: &[&str] = &["aujourd", "quelqu", "presqu", "prud", "entr", "grand", "main-d"];
 
 /// Splits `text` into tokens. French elisions (`l'`, `qu'`…) become separate tokens.
 pub fn tokenize(text: &str, lang: Language) -> Vec<Token<'_>> {
@@ -95,10 +92,7 @@ pub fn tokenize(text: &str, lang: Language) -> Vec<Token<'_>> {
             let len = if rest.starts_with("\r\n") { 2 } else { 1 };
             (TokenKind::Newline, len)
         } else if is_hspace(c) {
-            let len = rest
-                .char_indices()
-                .find(|&(_, ch)| !is_hspace(ch))
-                .map_or(rest.len(), |(idx, _)| idx);
+            let len = rest.char_indices().find(|&(_, ch)| !is_hspace(ch)).map_or(rest.len(), |(idx, _)| idx);
             (TokenKind::Space, len)
         } else if let Some(len) = opaque_len(rest) {
             (TokenKind::Opaque, len)
@@ -114,11 +108,7 @@ pub fn tokenize(text: &str, lang: Language) -> Vec<Token<'_>> {
         } else if is_word_char(c) {
             (TokenKind::Word, word_len(rest))
         } else if c.is_ascii_punctuation() || is_unicode_punct(c) {
-            let len = if rest.starts_with("...") {
-                3
-            } else {
-                c.len_utf8()
-            };
+            let len = if rest.starts_with("...") { 3 } else { c.len_utf8() };
             (TokenKind::Punct, len)
         } else {
             (TokenKind::Symbol, c.len_utf8())
@@ -140,11 +130,7 @@ fn make_token(kind: TokenKind, text: &str, start: usize) -> Token<'_> {
         text,
         start,
         end: start + text.len(),
-        lower: if kind == TokenKind::Word {
-            text.to_lowercase()
-        } else {
-            String::new()
-        },
+        lower: if kind == TokenKind::Word { text.to_lowercase() } else { String::new() },
     }
 }
 
@@ -153,8 +139,7 @@ fn push_french_word<'a>(tokens: &mut Vec<Token<'a>>, piece: &'a str, start: usiz
     let mut rest = piece;
     while let Some((idx, ap)) = rest.char_indices().find(|&(_, c)| is_apostrophe(c)) {
         let head = rest[..idx].to_lowercase();
-        let keep_whole = FR_APOSTROPHE_WORDS.iter().any(|w| head == *w)
-            || !FR_ELISIONS.contains(&head.as_str());
+        let keep_whole = FR_APOSTROPHE_WORDS.iter().any(|w| head == *w) || !FR_ELISIONS.contains(&head.as_str());
         if keep_whole {
             break;
         }
@@ -169,10 +154,7 @@ fn push_french_word<'a>(tokens: &mut Vec<Token<'a>>, piece: &'a str, start: usiz
 }
 
 fn is_unicode_punct(c: char) -> bool {
-    matches!(
-        c,
-        '«' | '»' | '“' | '”' | '‘' | '’' | '…' | '–' | '—' | '¿' | '¡' | '‹' | '›' | '•' | '·'
-    )
+    matches!(c, '«' | '»' | '“' | '”' | '‘' | '’' | '…' | '–' | '—' | '¿' | '¡' | '‹' | '›' | '•' | '·')
 }
 
 fn word_len(s: &str) -> usize {
@@ -205,8 +187,7 @@ fn number_len(s: &str) -> usize {
     while let Some((idx, c)) = chars.next() {
         if c.is_ascii_digit() {
             end = idx + 1;
-        } else if matches!(c, '.' | ',') && chars.peek().is_some_and(|(_, n)| n.is_ascii_digit())
-        {
+        } else if matches!(c, '.' | ',') && chars.peek().is_some_and(|(_, n)| n.is_ascii_digit()) {
             continue;
         } else {
             break;
@@ -232,9 +213,7 @@ fn opaque_len(s: &str) -> Option<usize> {
         at.is_some_and(|a| {
             a > 0
                 && chunk[a + 1..].contains('.')
-                && chunk[..a]
-                    .chars()
-                    .all(|c| c.is_alphanumeric() || matches!(c, '.' | '_' | '-' | '+'))
+                && chunk[..a].chars().all(|c| c.is_alphanumeric() || matches!(c, '.' | '_' | '-' | '+'))
         })
     };
     if !(is_url || is_email) {
@@ -246,9 +225,8 @@ fn opaque_len(s: &str) -> Option<usize> {
 }
 
 const ABBREVIATIONS: &[&str] = &[
-    "m", "mm", "mme", "mmes", "mlle", "dr", "pr", "st", "ste", "etc", "cf", "p", "pp", "env",
-    "av", "apr", "j.-c", "mr", "mrs", "ms", "prof", "vs", "e.g", "i.e", "no", "vol", "fig", "ex",
-    "art", "chap", "éd", "ed",
+    "m", "mm", "mme", "mmes", "mlle", "dr", "pr", "st", "ste", "etc", "cf", "p", "pp", "env", "av", "apr", "j.-c",
+    "mr", "mrs", "ms", "prof", "vs", "e.g", "i.e", "no", "vol", "fig", "ex", "art", "chap", "éd", "ed",
 ];
 
 /// Splits the token list into sentences, returned as ranges of token indices.
@@ -274,15 +252,12 @@ pub fn sentences(tokens: &[Token<'_>]) -> Vec<std::ops::Range<usize>> {
             let mut j = i + 1;
             while j < tokens.len()
                 && tokens[j].kind == TokenKind::Punct
-                && matches!(
-                    tokens[j].text,
-                    "!" | "?" | "." | "»" | "”" | "\"" | ")" | "’" | "'" | "…"
-                )
+                && matches!(tokens[j].text, "!" | "?" | "." | "»" | "”" | "\"" | ")" | "’" | "'" | "…")
             {
                 j += 1;
             }
-            let followed_by_space = j >= tokens.len()
-                || matches!(tokens[j].kind, TokenKind::Space | TokenKind::Newline);
+            let followed_by_space =
+                j >= tokens.len() || matches!(tokens[j].kind, TokenKind::Space | TokenKind::Newline);
             if !is_abbrev && followed_by_space {
                 i = j - 1;
                 boundary = true;
@@ -321,11 +296,7 @@ impl Utf16Index {
             }
             u16pos += c.len_utf16();
         }
-        Utf16Index {
-            boundaries,
-            len: text.len(),
-            len16: u16pos,
-        }
+        Utf16Index { boundaries, len: text.len(), len16: u16pos }
     }
 
     pub fn to_utf16(&self, byte: usize) -> usize {
@@ -386,8 +357,26 @@ pub fn starts_with_vowel(word: &str) -> bool {
     word.chars().next().is_some_and(|c| {
         matches!(
             c.to_lowercase().next().unwrap_or(c),
-            'a' | 'e' | 'i' | 'o' | 'u' | 'à' | 'â' | 'ä' | 'é' | 'è' | 'ê' | 'ë' | 'î' | 'ï' | 'ô'
-                | 'ö' | 'û' | 'ù' | 'ü' | 'œ' | 'æ'
+            'a' | 'e'
+                | 'i'
+                | 'o'
+                | 'u'
+                | 'à'
+                | 'â'
+                | 'ä'
+                | 'é'
+                | 'è'
+                | 'ê'
+                | 'ë'
+                | 'î'
+                | 'ï'
+                | 'ô'
+                | 'ö'
+                | 'û'
+                | 'ù'
+                | 'ü'
+                | 'œ'
+                | 'æ'
         )
     })
 }
@@ -397,11 +386,7 @@ mod tests {
     use super::*;
 
     fn words(text: &str, lang: Language) -> Vec<&str> {
-        tokenize(text, lang)
-            .into_iter()
-            .filter(|t| t.is_word())
-            .map(|t| t.text)
-            .collect()
+        tokenize(text, lang).into_iter().filter(|t| t.is_word()).map(|t| t.text).collect()
     }
 
     #[test]

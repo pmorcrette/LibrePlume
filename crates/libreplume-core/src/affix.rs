@@ -174,7 +174,7 @@ impl Lexicon {
             .collect();
         let finir_like: HashSet<&str> = rules
             .iter()
-            .filter(|(_, rs)| rs.iter().any(|r| r.add.ends_with("issons")))
+            .filter(|(_, rs)| rs.iter().any(|r| r.strip.ends_with("ir") && r.add.ends_with("issons")))
             .map(|(f, _)| f.as_str())
             .collect();
 
@@ -242,13 +242,14 @@ mod tests {
 
     #[test]
     fn expands_suffixes() {
-        let aff = "FLAG long\nSFX S. Y 2\nSFX S. 0 0/L' [^sxz]\nSFX S. 0 s/D' [^sxz]\nSFX a0 Y 1\nSFX a0 er ons/n' er\nSFX f0 Y 1\nSFX f0 ir issons ir\n";
-        let dic = "4\nchat/S.\nchanter/a0\nfinir/f0\navec\n";
+        let aff = "FLAG long\nSFX S. Y 2\nSFX S. 0 0/L' [^sxz]\nSFX S. 0 s/D' [^sxz]\nSFX a0 Y 1\nSFX a0 er ons/n' er\nSFX f0 Y 1\nSFX f0 ir issons ir\nSFX wQ aître aissons aître\n";
+        let dic = "5\nchat/S.\nchanter/a0\nfinir/f0\navec\nconnaître/wQ\n";
         let lex = Lexicon::build(aff, dic);
         assert_eq!(lex.class("chat"), class::SINGULAR);
         assert_eq!(lex.class("chats"), class::PLURAL);
         assert_eq!(lex.class("avec"), class::OTHER);
-        assert_eq!(lex.verbs, vec!["chanter", "finir"]);
+        assert_eq!(lex.verbs, vec!["chanter", "finir", "connaître"]);
+        assert!(!lex.second_group.contains("connaître"));
         assert!(lex.second_group.contains("finir"));
         assert!(!lex.contains("chanter"));
     }

@@ -7,78 +7,170 @@ pub const PRONOUNS: [&str; 6] = ["I", "you", "he/she/it", "we", "you", "they"];
 
 /// (base, past simple, past participle)
 pub const IRREGULAR: &[(&str, &str, &str)] = &[
-    ("arise", "arose", "arisen"), ("awake", "awoke", "awoken"), ("be", "was", "been"),
-    ("bear", "bore", "borne"), ("beat", "beat", "beaten"), ("become", "became", "become"),
-    ("begin", "began", "begun"), ("bend", "bent", "bent"), ("bet", "bet", "bet"),
-    ("bind", "bound", "bound"), ("bite", "bit", "bitten"), ("bleed", "bled", "bled"),
-    ("blow", "blew", "blown"), ("break", "broke", "broken"), ("breed", "bred", "bred"),
-    ("bring", "brought", "brought"), ("build", "built", "built"), ("burn", "burnt", "burnt"),
-    ("burst", "burst", "burst"), ("buy", "bought", "bought"), ("catch", "caught", "caught"),
-    ("choose", "chose", "chosen"), ("cling", "clung", "clung"), ("come", "came", "come"),
-    ("cost", "cost", "cost"), ("creep", "crept", "crept"), ("cut", "cut", "cut"),
-    ("deal", "dealt", "dealt"), ("dig", "dug", "dug"), ("do", "did", "done"),
-    ("draw", "drew", "drawn"), ("dream", "dreamt", "dreamt"), ("drink", "drank", "drunk"),
-    ("drive", "drove", "driven"), ("eat", "ate", "eaten"), ("fall", "fell", "fallen"),
-    ("feed", "fed", "fed"), ("feel", "felt", "felt"), ("fight", "fought", "fought"),
-    ("find", "found", "found"), ("flee", "fled", "fled"), ("fly", "flew", "flown"),
-    ("forbid", "forbade", "forbidden"), ("forget", "forgot", "forgotten"),
-    ("forgive", "forgave", "forgiven"), ("freeze", "froze", "frozen"), ("get", "got", "got"),
-    ("give", "gave", "given"), ("go", "went", "gone"), ("grind", "ground", "ground"),
-    ("grow", "grew", "grown"), ("hang", "hung", "hung"), ("have", "had", "had"),
-    ("hear", "heard", "heard"), ("hide", "hid", "hidden"), ("hit", "hit", "hit"),
-    ("hold", "held", "held"), ("hurt", "hurt", "hurt"), ("keep", "kept", "kept"),
-    ("kneel", "knelt", "knelt"), ("know", "knew", "known"), ("lay", "laid", "laid"),
-    ("lead", "led", "led"), ("lean", "leant", "leant"), ("leap", "leapt", "leapt"),
-    ("learn", "learnt", "learnt"), ("leave", "left", "left"), ("lend", "lent", "lent"),
-    ("let", "let", "let"), ("lie", "lay", "lain"), ("light", "lit", "lit"),
-    ("lose", "lost", "lost"), ("make", "made", "made"), ("mean", "meant", "meant"),
-    ("meet", "met", "met"), ("pay", "paid", "paid"), ("put", "put", "put"),
-    ("quit", "quit", "quit"), ("read", "read", "read"), ("ride", "rode", "ridden"),
-    ("ring", "rang", "rung"), ("rise", "rose", "risen"), ("run", "ran", "run"),
-    ("say", "said", "said"), ("see", "saw", "seen"), ("seek", "sought", "sought"),
-    ("sell", "sold", "sold"), ("send", "sent", "sent"), ("set", "set", "set"),
-    ("sew", "sewed", "sewn"), ("shake", "shook", "shaken"), ("shine", "shone", "shone"),
-    ("shoot", "shot", "shot"), ("show", "showed", "shown"), ("shrink", "shrank", "shrunk"),
-    ("shut", "shut", "shut"), ("sing", "sang", "sung"), ("sink", "sank", "sunk"),
-    ("sit", "sat", "sat"), ("sleep", "slept", "slept"), ("slide", "slid", "slid"),
-    ("speak", "spoke", "spoken"), ("speed", "sped", "sped"), ("spend", "spent", "spent"),
-    ("spin", "spun", "spun"), ("spit", "spat", "spat"), ("split", "split", "split"),
-    ("spread", "spread", "spread"), ("spring", "sprang", "sprung"), ("stand", "stood", "stood"),
-    ("steal", "stole", "stolen"), ("stick", "stuck", "stuck"), ("sting", "stung", "stung"),
-    ("stink", "stank", "stunk"), ("strike", "struck", "struck"), ("swear", "swore", "sworn"),
-    ("sweep", "swept", "swept"), ("swim", "swam", "swum"), ("swing", "swung", "swung"),
-    ("take", "took", "taken"), ("teach", "taught", "taught"), ("tear", "tore", "torn"),
-    ("tell", "told", "told"), ("think", "thought", "thought"), ("throw", "threw", "thrown"),
-    ("understand", "understood", "understood"), ("undertake", "undertook", "undertaken"),
-    ("upset", "upset", "upset"), ("wake", "woke", "woken"), ("wear", "wore", "worn"),
-    ("weave", "wove", "woven"), ("weep", "wept", "wept"), ("win", "won", "won"),
-    ("wind", "wound", "wound"), ("withdraw", "withdrew", "withdrawn"), ("write", "wrote", "written"),
-    ("overcome", "overcame", "overcome"), ("mistake", "mistook", "mistaken"),
-    ("misunderstand", "misunderstood", "misunderstood"), ("rewrite", "rewrote", "rewritten"),
-    ("broadcast", "broadcast", "broadcast"), ("forecast", "forecast", "forecast"),
-    ("outdo", "outdid", "outdone"), ("overtake", "overtook", "overtaken"),
+    ("arise", "arose", "arisen"),
+    ("awake", "awoke", "awoken"),
+    ("be", "was", "been"),
+    ("bear", "bore", "borne"),
+    ("beat", "beat", "beaten"),
+    ("become", "became", "become"),
+    ("begin", "began", "begun"),
+    ("bend", "bent", "bent"),
+    ("bet", "bet", "bet"),
+    ("bind", "bound", "bound"),
+    ("bite", "bit", "bitten"),
+    ("bleed", "bled", "bled"),
+    ("blow", "blew", "blown"),
+    ("break", "broke", "broken"),
+    ("breed", "bred", "bred"),
+    ("bring", "brought", "brought"),
+    ("build", "built", "built"),
+    ("burn", "burnt", "burnt"),
+    ("burst", "burst", "burst"),
+    ("buy", "bought", "bought"),
+    ("catch", "caught", "caught"),
+    ("choose", "chose", "chosen"),
+    ("cling", "clung", "clung"),
+    ("come", "came", "come"),
+    ("cost", "cost", "cost"),
+    ("creep", "crept", "crept"),
+    ("cut", "cut", "cut"),
+    ("deal", "dealt", "dealt"),
+    ("dig", "dug", "dug"),
+    ("do", "did", "done"),
+    ("draw", "drew", "drawn"),
+    ("dream", "dreamt", "dreamt"),
+    ("drink", "drank", "drunk"),
+    ("drive", "drove", "driven"),
+    ("eat", "ate", "eaten"),
+    ("fall", "fell", "fallen"),
+    ("feed", "fed", "fed"),
+    ("feel", "felt", "felt"),
+    ("fight", "fought", "fought"),
+    ("find", "found", "found"),
+    ("flee", "fled", "fled"),
+    ("fly", "flew", "flown"),
+    ("forbid", "forbade", "forbidden"),
+    ("forget", "forgot", "forgotten"),
+    ("forgive", "forgave", "forgiven"),
+    ("freeze", "froze", "frozen"),
+    ("get", "got", "got"),
+    ("give", "gave", "given"),
+    ("go", "went", "gone"),
+    ("grind", "ground", "ground"),
+    ("grow", "grew", "grown"),
+    ("hang", "hung", "hung"),
+    ("have", "had", "had"),
+    ("hear", "heard", "heard"),
+    ("hide", "hid", "hidden"),
+    ("hit", "hit", "hit"),
+    ("hold", "held", "held"),
+    ("hurt", "hurt", "hurt"),
+    ("keep", "kept", "kept"),
+    ("kneel", "knelt", "knelt"),
+    ("know", "knew", "known"),
+    ("lay", "laid", "laid"),
+    ("lead", "led", "led"),
+    ("lean", "leant", "leant"),
+    ("leap", "leapt", "leapt"),
+    ("learn", "learnt", "learnt"),
+    ("leave", "left", "left"),
+    ("lend", "lent", "lent"),
+    ("let", "let", "let"),
+    ("lie", "lay", "lain"),
+    ("light", "lit", "lit"),
+    ("lose", "lost", "lost"),
+    ("make", "made", "made"),
+    ("mean", "meant", "meant"),
+    ("meet", "met", "met"),
+    ("pay", "paid", "paid"),
+    ("put", "put", "put"),
+    ("quit", "quit", "quit"),
+    ("read", "read", "read"),
+    ("ride", "rode", "ridden"),
+    ("ring", "rang", "rung"),
+    ("rise", "rose", "risen"),
+    ("run", "ran", "run"),
+    ("say", "said", "said"),
+    ("see", "saw", "seen"),
+    ("seek", "sought", "sought"),
+    ("sell", "sold", "sold"),
+    ("send", "sent", "sent"),
+    ("set", "set", "set"),
+    ("sew", "sewed", "sewn"),
+    ("shake", "shook", "shaken"),
+    ("shine", "shone", "shone"),
+    ("shoot", "shot", "shot"),
+    ("show", "showed", "shown"),
+    ("shrink", "shrank", "shrunk"),
+    ("shut", "shut", "shut"),
+    ("sing", "sang", "sung"),
+    ("sink", "sank", "sunk"),
+    ("sit", "sat", "sat"),
+    ("sleep", "slept", "slept"),
+    ("slide", "slid", "slid"),
+    ("speak", "spoke", "spoken"),
+    ("speed", "sped", "sped"),
+    ("spend", "spent", "spent"),
+    ("spin", "spun", "spun"),
+    ("spit", "spat", "spat"),
+    ("split", "split", "split"),
+    ("spread", "spread", "spread"),
+    ("spring", "sprang", "sprung"),
+    ("stand", "stood", "stood"),
+    ("steal", "stole", "stolen"),
+    ("stick", "stuck", "stuck"),
+    ("sting", "stung", "stung"),
+    ("stink", "stank", "stunk"),
+    ("strike", "struck", "struck"),
+    ("swear", "swore", "sworn"),
+    ("sweep", "swept", "swept"),
+    ("swim", "swam", "swum"),
+    ("swing", "swung", "swung"),
+    ("take", "took", "taken"),
+    ("teach", "taught", "taught"),
+    ("tear", "tore", "torn"),
+    ("tell", "told", "told"),
+    ("think", "thought", "thought"),
+    ("throw", "threw", "thrown"),
+    ("understand", "understood", "understood"),
+    ("undertake", "undertook", "undertaken"),
+    ("upset", "upset", "upset"),
+    ("wake", "woke", "woken"),
+    ("wear", "wore", "worn"),
+    ("weave", "wove", "woven"),
+    ("weep", "wept", "wept"),
+    ("win", "won", "won"),
+    ("wind", "wound", "wound"),
+    ("withdraw", "withdrew", "withdrawn"),
+    ("write", "wrote", "written"),
+    ("overcome", "overcame", "overcome"),
+    ("mistake", "mistook", "mistaken"),
+    ("misunderstand", "misunderstood", "misunderstood"),
+    ("rewrite", "rewrote", "rewritten"),
+    ("broadcast", "broadcast", "broadcast"),
+    ("forecast", "forecast", "forecast"),
+    ("outdo", "outdid", "outdone"),
+    ("overtake", "overtook", "overtaken"),
 ];
 
 /// Frequent regular verbs, used by the grammar rules to recognise base forms.
 pub const COMMON_REGULAR: &[&str] = &[
-    "accept", "add", "agree", "allow", "answer", "appear", "arrive", "ask", "believe",
-    "belong", "call", "change", "check", "clean", "close", "complain", "contain", "cook",
-    "cry", "dance", "decide", "depend", "describe", "die", "enjoy", "explain", "fail",
-    "fill", "finish", "follow", "happen", "hate", "help", "hope", "improve", "include",
-    "invite", "join", "jump", "kill", "kiss", "laugh", "like", "listen", "live", "look",
-    "love", "manage", "matter", "miss", "move", "need", "offer", "open", "order", "own",
-    "play", "prefer", "prepare", "promise", "pull", "push", "reach", "realize", "receive",
-    "remember", "rain", "seem", "share", "smile", "start", "stay", "stop", "study",
-    "suggest", "talk", "thank", "touch", "travel", "try", "turn", "use", "visit", "wait",
-    "walk", "want", "wash", "watch", "wish", "work", "worry", "carry", "create", "develop",
-    "provide", "require", "support", "learn", "mean", "seem", "plan", "agree", "admit",
+    "accept", "add", "agree", "allow", "answer", "appear", "arrive", "ask", "believe", "belong", "call", "change",
+    "check", "clean", "close", "complain", "contain", "cook", "cry", "dance", "decide", "depend", "describe", "die",
+    "enjoy", "explain", "fail", "fill", "finish", "follow", "happen", "hate", "help", "hope", "improve", "include",
+    "invite", "join", "jump", "kill", "kiss", "laugh", "like", "listen", "live", "look", "love", "manage", "matter",
+    "miss", "move", "need", "offer", "open", "order", "own", "play", "prefer", "prepare", "promise", "pull", "push",
+    "reach", "realize", "receive", "remember", "rain", "seem", "share", "smile", "start", "stay", "stop", "study",
+    "suggest", "talk", "thank", "touch", "travel", "try", "turn", "use", "visit", "wait", "walk", "want", "wash",
+    "watch", "wish", "work", "worry", "carry", "create", "develop", "provide", "require", "support", "learn", "mean",
+    "seem", "plan", "agree", "admit",
 ];
 
 /// Verbs that double their final consonant despite having several syllables.
 const DOUBLING: &[&str] = &[
-    "admit", "begin", "commit", "control", "occur", "prefer", "refer", "regret", "forget",
-    "permit", "submit", "transfer", "omit", "equip", "upset", "compel", "expel", "propel",
-    "patrol", "rebel", "acquit", "deter", "incur", "recur", "infer", "confer", "defer",
+    "admit", "begin", "commit", "control", "occur", "prefer", "refer", "regret", "forget", "permit", "submit",
+    "transfer", "omit", "equip", "upset", "compel", "expel", "propel", "patrol", "rebel", "acquit", "deter", "incur",
+    "recur", "infer", "confer", "defer",
 ];
 
 pub fn irregular(base: &str) -> Option<(&'static str, &'static str)> {
@@ -102,11 +194,7 @@ fn doubles_final(base: &str) -> bool {
     if n < 3 {
         return false;
     }
-    let vowel_groups = c
-        .iter()
-        .enumerate()
-        .filter(|&(i, &ch)| is_vowel(ch) && (i == 0 || !is_vowel(c[i - 1])))
-        .count();
+    let vowel_groups = c.iter().enumerate().filter(|&(i, &ch)| is_vowel(ch) && (i == 0 || !is_vowel(c[i - 1]))).count();
     vowel_groups == 1
         && !is_vowel(c[n - 1])
         && !matches!(c[n - 1], 'w' | 'x' | 'y')
@@ -124,7 +212,13 @@ pub fn third_person(base: &str) -> String {
     }
     let chars: Vec<char> = base.chars().collect();
     let n = chars.len();
-    if base.ends_with('s') || base.ends_with('x') || base.ends_with('z') || base.ends_with("ch") || base.ends_with("sh") || base.ends_with('o') {
+    if base.ends_with('s')
+        || base.ends_with('x')
+        || base.ends_with('z')
+        || base.ends_with("ch")
+        || base.ends_with("sh")
+        || base.ends_with('o')
+    {
         format!("{base}es")
     } else if n >= 2 && chars[n - 1] == 'y' && !is_vowel(chars[n - 2]) {
         format!("{}ies", &base[..base.len() - 1])
@@ -140,7 +234,8 @@ pub fn present_participle(base: &str) -> String {
     if let Some(stem) = base.strip_suffix("ie") {
         return format!("{stem}ying");
     }
-    if base.ends_with('e') && !base.ends_with("ee") && !base.ends_with("ye") && !base.ends_with("oe") && base.len() > 2 {
+    if base.ends_with('e') && !base.ends_with("ee") && !base.ends_with("ye") && !base.ends_with("oe") && base.len() > 2
+    {
         return format!("{}ing", &base[..base.len() - 1]);
     }
     if doubles_final(base) {
@@ -248,7 +343,9 @@ pub fn conjugate(input: &str) -> Result<Conjugation, ConjugationError> {
         tense("present", "Present simple", false, &present_simple),
         tense("present_continuous", "Present continuous", true, &|p| format!("{} {ing}", be_present(p))),
         tense("present_perfect", "Present perfect", true, &|p| format!("{} {pp}", have_present(p))),
-        tense("present_perfect_continuous", "Present perfect continuous", true, &|p| format!("{} been {ing}", have_present(p))),
+        tense("present_perfect_continuous", "Present perfect continuous", true, &|p| {
+            format!("{} been {ing}", have_present(p))
+        }),
         tense("past", "Past simple", false, &past_simple),
         tense("past_continuous", "Past continuous", true, &|p| format!("{} {ing}", be_past(p))),
         tense("past_perfect", "Past perfect", true, &|_| format!("had {pp}")),

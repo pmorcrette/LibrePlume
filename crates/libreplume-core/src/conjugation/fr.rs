@@ -183,12 +183,28 @@ static MODELS: &[Model] = &[
         subj: Some(["puisse", "puisses", "puisse", "puissions", "puissiez", "puissent"]),
         imper: Some(["", "", ""]),
         pp_invariable: true,
-        ..model("pouvoir", "pouvoir", ["peux", "peux", "peut", "pouvons", "pouvez", "peuvent"], Ps::U, "p", "pourr", "pu")
+        ..model(
+            "pouvoir",
+            "pouvoir",
+            ["peux", "peux", "peut", "pouvons", "pouvez", "peuvent"],
+            Ps::U,
+            "p",
+            "pourr",
+            "pu",
+        )
     },
     Model {
         subj: Some(["veuille", "veuilles", "veuille", "voulions", "vouliez", "veuillent"]),
         imper: Some(["veuille", "veuillons", "veuillez"]),
-        ..model("vouloir", "vouloir", ["veux", "veux", "veut", "voulons", "voulez", "veulent"], Ps::U, "voul", "voudr", "voulu")
+        ..model(
+            "vouloir",
+            "vouloir",
+            ["veux", "veux", "veut", "voulons", "voulez", "veulent"],
+            Ps::U,
+            "voul",
+            "voudr",
+            "voulu",
+        )
     },
     Model {
         subj: Some(["sache", "saches", "sache", "sachions", "sachiez", "sachent"]),
@@ -219,17 +235,22 @@ static MODELS: &[Model] = &[
     model("prévoir", "voir", ["vois", "vois", "voit", "voyons", "voyez", "voient"], Ps::I, "v", "voir", "vu"),
     model("pourvoir", "voir", ["vois", "vois", "voit", "voyons", "voyez", "voient"], Ps::U, "v", "voir", "vu"),
     model("venir", "enir", ["iens", "iens", "ient", "enons", "enez", "iennent"], Ps::In, "", "iendr", "enu"),
-    model("prendre", "prendre", ["prends", "prends", "prend", "prenons", "prenez", "prennent"], Ps::I, "pr", "prendr", "pris"),
+    model(
+        "prendre",
+        "prendre",
+        ["prends", "prends", "prend", "prenons", "prenez", "prennent"],
+        Ps::I,
+        "pr",
+        "prendr",
+        "pris",
+    ),
     model("mettre", "mettre", ["mets", "mets", "met", "mettons", "mettez", "mettent"], Ps::I, "m", "mettr", "mis"),
     model("battre", "battre", ["bats", "bats", "bat", "battons", "battez", "battent"], Ps::I, "batt", "battr", "battu"),
     model("rendre", "re", ["s", "s", "", "ons", "ez", "ent"], Ps::I, "", "r", "u"),
     model("rompre", "re", ["s", "s", "t", "ons", "ez", "ent"], Ps::I, "", "r", "u"),
     model("peindre", "ndre", ["ns", "ns", "nt", "gnons", "gnez", "gnent"], Ps::I, "gn", "ndr", "nt"),
     model("conduire", "re", ["s", "s", "t", "sons", "sez", "sent"], Ps::I, "s", "r", "t"),
-    Model {
-        pp_invariable: true,
-        ..model("luire", "re", ["s", "s", "t", "sons", "sez", "sent"], Ps::I, "s", "r", "")
-    },
+    Model { pp_invariable: true, ..model("luire", "re", ["s", "s", "t", "sons", "sez", "sent"], Ps::I, "s", "r", "") },
     model("connaître", "aître", ["ais", "ais", "aît", "aissons", "aissez", "aissent"], Ps::U, "", "aîtr", "u"),
     model("naître", "aître", ["ais", "ais", "aît", "aissons", "aissez", "aissent"], Ps::I, "aqu", "aîtr", "é"),
     model("croire", "oire", ["ois", "ois", "oit", "oyons", "oyez", "oient"], Ps::U, "", "oir", "u"),
@@ -271,17 +292,22 @@ static MODELS: &[Model] = &[
     model("résoudre", "oudre", ["ous", "ous", "out", "olvons", "olvez", "olvent"], Ps::U, "olv", "oudr", "olu"),
     model("conclure", "ure", ["us", "us", "ut", "uons", "uez", "uent"], Ps::U, "", "ur", "u"),
     model("inclure", "ure", ["us", "us", "ut", "uons", "uez", "uent"], Ps::U, "", "ur", "us"),
-    model("bouillir", "ouillir", ["ous", "ous", "out", "ouillons", "ouillez", "ouillent"], Ps::I, "ouill", "ouillir", "ouilli"),
+    model(
+        "bouillir",
+        "ouillir",
+        ["ous", "ous", "out", "ouillons", "ouillez", "ouillent"],
+        Ps::I,
+        "ouill",
+        "ouillir",
+        "ouilli",
+    ),
     model("vêtir", "ir", ["s", "s", "", "ons", "ez", "ent"], Ps::I, "", "ir", "u"),
     model("traire", "aire", ["ais", "ais", "ait", "ayons", "ayez", "aient"], Ps::None, "", "air", "ait"),
     model("accroître", "oître", ["ois", "ois", "oît", "oissons", "oissez", "oissent"], Ps::U, "", "oîtr", "u"),
 ];
 
 fn find_model(name: &str) -> &'static Model {
-    MODELS
-        .iter()
-        .find(|m| m.name == name)
-        .unwrap_or_else(|| panic!("unknown conjugation model {name}"))
+    MODELS.iter().find(|m| m.name == name).unwrap_or_else(|| panic!("unknown conjugation model {name}"))
 }
 
 /// Verbs that take a specific model regardless of their ending.
@@ -419,25 +445,95 @@ const SUFFIX_MODELS: &[(&str, &str)] = &[
 
 /// Verbs conjugated with « être » in compound tenses.
 const ETRE_VERBS: &[&str] = &[
-    "aller", "venir", "devenir", "revenir", "redevenir", "parvenir", "survenir", "intervenir",
-    "advenir", "provenir", "arriver", "partir", "repartir", "entrer", "rentrer", "monter",
-    "remonter", "descendre", "redescendre", "tomber", "retomber", "rester", "naître", "renaître",
-    "mourir", "décéder", "retourner", "sortir", "ressortir", "passer", "repasser", "apparaître",
-    "éclore", "accourir",
+    "aller",
+    "venir",
+    "devenir",
+    "revenir",
+    "redevenir",
+    "parvenir",
+    "survenir",
+    "intervenir",
+    "advenir",
+    "provenir",
+    "arriver",
+    "partir",
+    "repartir",
+    "entrer",
+    "rentrer",
+    "monter",
+    "remonter",
+    "descendre",
+    "redescendre",
+    "tomber",
+    "retomber",
+    "rester",
+    "naître",
+    "renaître",
+    "mourir",
+    "décéder",
+    "retourner",
+    "sortir",
+    "ressortir",
+    "passer",
+    "repasser",
+    "apparaître",
+    "éclore",
+    "accourir",
 ];
 
 /// Verbs in -eler/-eter that take « è » instead of doubling the consonant.
 const E_GRAVE_ELER: &[&str] = &[
-    "acheter", "racheter", "geler", "dégeler", "congeler", "surgeler", "regeler", "peler",
-    "modeler", "remodeler", "harceler", "celer", "receler", "déceler", "ciseler", "démanteler",
-    "écarteler", "marteler", "crocheter", "fureter", "haleter", "corseter", "bégueter",
+    "acheter",
+    "racheter",
+    "geler",
+    "dégeler",
+    "congeler",
+    "surgeler",
+    "regeler",
+    "peler",
+    "modeler",
+    "remodeler",
+    "harceler",
+    "celer",
+    "receler",
+    "déceler",
+    "ciseler",
+    "démanteler",
+    "écarteler",
+    "marteler",
+    "crocheter",
+    "fureter",
+    "haleter",
+    "corseter",
+    "bégueter",
 ];
 
 /// Verbs beginning with an aspirated h (no elision: « je hais »).
 const H_ASPIRE_VERBS: &[&str] = &[
-    "haïr", "hacher", "haleter", "hanter", "happer", "harceler", "harasser", "harponner",
-    "hasarder", "hâter", "hausser", "heurter", "hisser", "hocher", "honnir", "hurler", "huer",
-    "hennir", "hérisser", "hacker", "handicaper", "hiérarchiser", "houspiller", "hululer",
+    "haïr",
+    "hacher",
+    "haleter",
+    "hanter",
+    "happer",
+    "harceler",
+    "harasser",
+    "harponner",
+    "hasarder",
+    "hâter",
+    "hausser",
+    "heurter",
+    "hisser",
+    "hocher",
+    "honnir",
+    "hurler",
+    "huer",
+    "hennir",
+    "hérisser",
+    "hacker",
+    "handicaper",
+    "hiérarchiser",
+    "houspiller",
+    "hululer",
 ];
 
 fn elides_before(word: &str, verb_infinitive: &str) -> bool {
@@ -465,7 +561,7 @@ fn resolve(verb: &str, second_group: Option<bool>) -> Option<Kind> {
     if verb.ends_with("er") && verb.chars().count() > 2 {
         return Some(Kind::First);
     }
-    if second_group == Some(true) {
+    if second_group == Some(true) && verb.ends_with("ir") {
         return Some(Kind::Second);
     }
     if let Some((_, name)) = SUFFIX_MODELS.iter().find(|(s, _)| verb.ends_with(s)) {
@@ -493,7 +589,7 @@ fn first_group_mute_stem(radical: &str, verb: &str, future: bool) -> String {
     }
     let chars: Vec<char> = radical.chars().collect();
     let n = chars.len();
-    if n >= 3 && (verb.ends_with("eler") || verb.ends_with("eter")) && chars[n - 2] == 'e' {
+    if n >= 3 && (verb.ends_with("eler") || verb.ends_with("eter")) && chars[n - 2] == 'e' && chars[n - 3] != 'e' {
         if E_GRAVE_ELER.contains(&verb) {
             let mut c = chars.clone();
             c[n - 2] = 'è';
@@ -505,8 +601,11 @@ fn first_group_mute_stem(radical: &str, verb: &str, future: bool) -> String {
     }
     // Find the last vowel and the consonant cluster after it.
     let is_vowel = |c: char| "aeiouyéèêëàâîïôöûüù".contains(c);
+    // The u of "gu" and "qu" is part of the consonant ("alléguer" → "allègue").
+    let is_consonant_at =
+        |i: usize| !is_vowel(chars[i]) || (chars[i] == 'u' && i > 0 && matches!(chars[i - 1], 'g' | 'q'));
     let mut i = n;
-    while i > 0 && !is_vowel(chars[i - 1]) {
+    while i > 0 && is_consonant_at(i - 1) {
         i -= 1;
     }
     if i == 0 || i == n {
@@ -515,11 +614,14 @@ fn first_group_mute_stem(radical: &str, verb: &str, future: bool) -> String {
     let vowel_idx = i - 1;
     let cluster: String = chars[i..].iter().collect();
     let cl: Vec<char> = cluster.chars().collect();
-    let cluster_ok = cl.len() == 1
-        || (cl.len() == 2 && cl[0] != cl[1] && matches!(cl[1], 'r' | 'l'))
-        || cluster == "gn"
-        || cluster == "ch";
-    if !cluster_ok {
+    let cluster_ok = (cl.len() == 1 && cl[0] != 'x')
+        || (cl.len() == 2
+            && matches!(cl[0], 'b' | 'c' | 'd' | 'f' | 'g' | 'p' | 't' | 'v')
+            && matches!(cl[1], 'r' | 'l'))
+        || matches!(cluster.as_str(), "gn" | "ch" | "gu" | "qu");
+    // "ee" in borrowed words ("geeker", "squeezer") never alternates.
+    let doubled_vowel = vowel_idx > 0 && matches!(chars[vowel_idx - 1], 'e' | 'é');
+    if !cluster_ok || doubled_vowel {
         return radical.to_string();
     }
     let v = chars[vowel_idx];
@@ -532,11 +634,7 @@ fn first_group_mute_stem(radical: &str, verb: &str, future: bool) -> String {
 }
 
 fn first_group_form(radical: &str, verb: &str, ending: &str, mute: bool) -> String {
-    let mut stem = if mute {
-        first_group_mute_stem(radical, verb, false)
-    } else {
-        radical.to_string()
-    };
+    let mut stem = if mute { first_group_mute_stem(radical, verb, false) } else { radical.to_string() };
     if starts_with_ao(ending) {
         if stem.ends_with('c') {
             stem.pop();
@@ -616,11 +714,7 @@ fn second_group_table(verb: &str, hair: bool) -> SimpleForms {
             ["ïsse", "ïsses", "ït", "ïssions", "ïssiez", "ïssent"],
         )
     } else {
-        (
-            ["is", "is", "it", "issons", "issez", "issent"],
-            Ps::I.endings(),
-            Ps::I.subj_endings(),
-        )
+        (["is", "is", "it", "issons", "issez", "issent"], Ps::I.endings(), Ps::I.subj_endings())
     };
     // For haïr the radical is "ha" and the diaeresis is written in the endings.
     let radical_imp = if hair { "ïss" } else { "iss" };
@@ -660,27 +754,14 @@ fn from_model(verb: &str, m: &'static Model) -> SimpleForms {
             Some(format!("{radical}{s}"))
         }
     };
-    let present: [Option<String>; 6] = arr6(|i| {
-        if m.impersonal && i != 2 {
-            None
-        } else {
-            r(m.present[i])
-        }
-    });
-    let imp_stem = m
-        .imparfait
-        .map(str::to_string)
-        .unwrap_or_else(|| m.present[3].trim_end_matches("ons").to_string());
+    let present: [Option<String>; 6] = arr6(|i| if m.impersonal && i != 2 { None } else { r(m.present[i]) });
+    let imp_stem = m.imparfait.map(str::to_string).unwrap_or_else(|| m.present[3].trim_end_matches("ons").to_string());
     let imparfait_end = ["ais", "ais", "ait", "ions", "iez", "aient"];
     let only3 = |i: usize| !m.impersonal || i == 2;
     let imparfait = arr6(|i| only3(i).then(|| format!("{radical}{imp_stem}{}", imparfait_end[i])));
-    let ps = arr6(|i| {
-        (only3(i) && m.ps != Ps::None).then(|| format!("{radical}{}{}", m.ps_stem, m.ps.endings()[i]))
-    });
-    let subj_imp = arr6(|i| {
-        (only3(i) && m.ps != Ps::None)
-            .then(|| format!("{radical}{}{}", m.ps_stem, m.ps.subj_endings()[i]))
-    });
+    let ps = arr6(|i| (only3(i) && m.ps != Ps::None).then(|| format!("{radical}{}{}", m.ps_stem, m.ps.endings()[i])));
+    let subj_imp =
+        arr6(|i| (only3(i) && m.ps != Ps::None).then(|| format!("{radical}{}{}", m.ps_stem, m.ps.subj_endings()[i])));
     let fut_end = ["ai", "as", "a", "ons", "ez", "ont"];
     let cond_end = ["ais", "ais", "ait", "ions", "iez", "aient"];
     let futur = arr6(|i| only3(i).then(|| format!("{radical}{}{}", m.futur, fut_end[i])));
@@ -831,11 +912,7 @@ pub fn conjugate(input: &str, second_group: Option<bool>, known: bool) -> Result
         for &p in &persons {
             let Some(form) = forms.get(t, p) else { continue };
             let pronoun = if subjunctive { subjunctive_pronoun(p, forms.impersonal) } else { pronoun_for(p) };
-            let form_words: Vec<&str> = if pronominal {
-                vec![REFLEXIVE[p], form]
-            } else {
-                vec![form]
-            };
+            let form_words: Vec<&str> = if pronominal { vec![REFLEXIVE[p], form] } else { vec![form] };
             let form_text = join_elide(&form_words, &verb);
             let mut all: Vec<&str> = pronoun.split(' ').collect();
             all.extend(form_words.iter());
@@ -849,11 +926,7 @@ pub fn conjugate(input: &str, second_group: Option<bool>, known: bool) -> Result
         let mut out = Vec::new();
         for &p in &persons {
             let Some(aux_form) = aux.get(t, p) else { continue };
-            let pp = if etre {
-                agreed_participle(&forms, p >= 3)
-            } else {
-                forms.past_participle[0].clone()
-            };
+            let pp = if etre { agreed_participle(&forms, p >= 3) } else { forms.past_participle[0].clone() };
             let pronoun = if subjunctive { subjunctive_pronoun(p, forms.impersonal) } else { pronoun_for(p) };
             let mut form_words: Vec<&str> = Vec::new();
             if pronominal {
@@ -906,11 +979,7 @@ pub fn conjugate(input: &str, second_group: Option<bool>, known: bool) -> Result
     const IMP_REFLEXIVE: [&str; 3] = ["toi", "nous", "vous"];
     for (k, form) in forms.imperative.iter().enumerate() {
         let Some(form) = form else { continue };
-        let text = if pronominal {
-            format!("{form}-{}", IMP_REFLEXIVE[k])
-        } else {
-            form.clone()
-        };
+        let text = if pronominal { format!("{form}-{}", IMP_REFLEXIVE[k]) } else { form.clone() };
         imp_present.push(PersonForm { pronoun: String::new(), form: text.clone(), text });
         if !pronominal {
             if let Some(a) = &aux.imperative[k] {
@@ -925,7 +994,8 @@ pub fn conjugate(input: &str, second_group: Option<bool>, known: bool) -> Result
         }
     }
     if !imp_present.is_empty() {
-        let mut tenses = vec![Tense { id: "present".into(), name: "Présent".into(), compound: false, forms: imp_present }];
+        let mut tenses =
+            vec![Tense { id: "present".into(), name: "Présent".into(), compound: false, forms: imp_present }];
         if !imp_passe.is_empty() {
             tenses.push(Tense { id: "passe".into(), name: "Passé".into(), compound: true, forms: imp_passe });
         }
@@ -944,7 +1014,11 @@ pub fn conjugate(input: &str, second_group: Option<bool>, known: bool) -> Result
                 id: "present".into(),
                 name: "Présent".into(),
                 compound: false,
-                forms: vec![PersonForm { pronoun: String::new(), form: infinitive_display.clone(), text: infinitive_display.clone() }],
+                forms: vec![PersonForm {
+                    pronoun: String::new(),
+                    form: infinitive_display.clone(),
+                    text: infinitive_display.clone(),
+                }],
             },
             Tense {
                 id: "passe".into(),
@@ -1019,6 +1093,10 @@ mod tests {
         assert_eq!(present("céder")[0], "cède");
         assert_eq!(present("nettoyer")[0], "nettoie");
         assert_eq!(present("créer")[0], "crée");
+        assert_eq!(present("alléguer")[0], "allègue");
+        assert_eq!(present("complexer")[0], "complexe");
+        assert_eq!(present("célébrer")[0], "célèbre");
+        assert_eq!(present("déferler")[0], "déferle");
         assert_eq!(tense("appeler", SimpleTense::IndFutur)[0], "appellerai");
         assert_eq!(tense("céder", SimpleTense::IndFutur)[0], "céderai");
         assert_eq!(tense("lever", SimpleTense::IndFutur)[0], "lèverai");
