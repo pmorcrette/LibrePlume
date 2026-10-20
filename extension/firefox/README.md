@@ -10,7 +10,7 @@ Checks what you type in text areas and rich text editors on any website, using
   fix everything at once. Fixes go through the browser's editing commands, so
   <kbd>Ctrl</kbd>+<kbd>Z</kbd> still works.
 - Inline underlines in rich text editors (Firefox 140+ with the CSS Highlight API).
-- Right-click a selection: *Check with LibrePlume* or *Conjugate*.
+- Right-click a selection: *Check with LibrePlume*, *Conjugate* or *Synonyms*.
 - Toolbar popup to check any pasted text and copy the corrected version.
 - <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> checks the focused field on demand.
 - Follows the server's default theme, in French or English.

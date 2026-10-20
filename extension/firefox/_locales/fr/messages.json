@@ -141,5 +141,8 @@
   },
   "cat_style": {
     "message": "Style"
+  },
+  "menuSynonyms": {
+    "message": "Synonymes de « %s »"
   }
 }

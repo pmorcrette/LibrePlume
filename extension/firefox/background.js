@@ -19,6 +19,7 @@ function createMenus() {
   browser.contextMenus.removeAll().then(() => {
     browser.contextMenus.create({ id: 'lp-check', title: browser.i18n.getMessage('menuCheck', '%s'), contexts: ['selection'] });
     browser.contextMenus.create({ id: 'lp-conjugate', title: browser.i18n.getMessage('menuConjugate', '%s'), contexts: ['selection'] });
+    browser.contextMenus.create({ id: 'lp-synonyms', title: browser.i18n.getMessage('menuSynonyms', '%s'), contexts: ['selection'] });
   });
 }
 
@@ -28,6 +29,12 @@ browser.runtime.onStartup.addListener(createMenus);
 browser.contextMenus.onClicked.addListener(async (info, tab) => {
   const text = (info.selectionText || '').trim();
   if (!text) return;
+  if (info.menuItemId === 'lp-synonyms') {
+    const settings = await loadSettings();
+    const lang = settings.language === 'en' ? 'en' : 'fr';
+    browser.tabs.create({ url: `${settings.server}/#/synonyms/${encodeURIComponent(text.slice(0, 80))}?lang=${lang}` });
+    return;
+  }
   if (info.menuItemId === 'lp-conjugate') {
     const settings = await loadSettings();
     const verb = text.split(/\s+/)[0].toLowerCase();
