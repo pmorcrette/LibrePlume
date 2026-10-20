@@ -22,12 +22,15 @@ fn french_errors() {
     expect(Fr, "Il à mangé une pomme.", "FR_A_ACCENT", "à", "a");
     expect(Fr, "Tu mange trop vite.", "FR_SUBJECT_VERB", "mange", "manges");
     expect(Fr, "Ils mangeons ensemble.", "FR_SUBJECT_VERB", "mangeons", "mangent");
+    expect(Fr, "Je vous écrit demain.", "FR_SUBJECT_VERB", "écrit", "écris");
+    expect(Fr, "Je te renvoi le document.", "FR_SUBJECT_VERB", "renvoi", "renvoie");
     expect(Fr, "J'ai manger une pomme.", "FR_PARTICIPLE_INFINITIVE", "manger", "mangé");
     expect(Fr, "Je vais mangé.", "FR_PARTICIPLE_INFINITIVE", "mangé", "manger");
     expect(Fr, "Si j'aurais su, je serais venu.", "FR_SI_CONDITIONAL", "aurais", "avais");
     expect(Fr, "Les chat dorment.", "FR_DET_NOUN_AGREEMENT", "chat", "chats");
     expect(Fr, "Il a mangé les pomme.", "FR_DET_NOUN_AGREEMENT", "pomme", "pommes");
     expect(Fr, "Je pense aux porte.", "FR_DET_NOUN_AGREEMENT", "porte", "portes");
+    expect(Fr, "Il manque encore les annexe.", "FR_DET_NOUN_AGREEMENT", "annexe", "annexes");
     expect(Fr, "Le arbre est grand.", "FR_ELISION", "Le arbre", "L'arbre");
     expect(Fr, "Je pars si il pleut.", "FR_ELISION", "si il", "s'il");
     expect(Fr, "Je parle de le livre.", "FR_CONTRACTION", "de le", "du");

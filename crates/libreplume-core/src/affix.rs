@@ -167,9 +167,18 @@ impl Lexicon {
             }
         }
 
+        // Conjugation flags strip the infinitive ending and add a finite ending. Impersonal
+        // verbs ("falloir", "pleuvoir") have no "-ons"/"-ant" forms, hence "-ait"/"-ra".
         let verbal: HashSet<&str> = rules
             .iter()
-            .filter(|(_, rs)| rs.iter().any(|r| r.add.ends_with("ons") || r.add.ends_with("ant")))
+            .filter(|(_, rs)| {
+                rs.iter().any(|r| {
+                    r.add.ends_with("ons")
+                        || r.add.ends_with("ant")
+                        || (["er", "ir", "re", "oir"].iter().any(|e| r.strip.ends_with(e))
+                            && ["ait", "ra", "rait"].iter().any(|e| r.add.ends_with(e)))
+                })
+            })
             .map(|(f, _)| f.as_str())
             .collect();
         let finir_like: HashSet<&str> = rules

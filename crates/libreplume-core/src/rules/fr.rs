@@ -211,13 +211,20 @@ fn subject_verb(ctx: &Ctx<'_>, out: &mut Vec<Found>) {
             if v.contains('-') || v_tok.starts_upper() && !ctx.starts_sentence(chunk[j]) {
                 continue;
             }
-            let hits = finite_hits(fr, &v);
-            if hits.is_empty() || hits.iter().any(|&(_, _, p)| p == person) {
-                continue;
-            }
-            // Only flag words that are verbs and nothing else ("tu chat" is a different problem).
-            if fr.lexicon.contains(&v) && !fr.verbs.lookup(&v).is_empty() && fr.lexicon.is_nominal(&v) && hits.len() < 2
-            {
+            let mut hits = finite_hits(fr, &v);
+            if hits.is_empty() {
+                // A homophone that is not a verb form at all: « je te renvoi » → « renvoie ».
+                hits = ["e", "s", "es", "t", "x"]
+                    .iter()
+                    .flat_map(|end| finite_hits(fr, &format!("{v}{end}")))
+                    .filter(|&(_, _, p)| p == person)
+                    .collect();
+                // Homophones with a dedicated rule (son/sont, on/ont, peu/peut…) are left to it.
+                let dedicated = matches!(v.as_str(), "son" | "on" | "et" | "peu" | "ce" | "sa" | "ou" | "ces" | "ses");
+                if hits.is_empty() || dedicated || fr.speller.check(&v) && !fr.lexicon.is_nominal(&v) {
+                    continue;
+                }
+            } else if hits.iter().any(|&(_, _, p)| p == person) {
                 continue;
             }
             let mut suggestions: Vec<String> = Vec::new();
@@ -663,7 +670,9 @@ fn det_noun_agreement(ctx: &Ctx<'_>, out: &mut Vec<Found>) {
                 if !hits.is_empty() {
                     // As a determiner, it follows a verb, a preposition or starts the group.
                     let after_verb_or_prep = prev.as_deref().is_none_or(|p| {
-                        PREPOSITIONS.contains(&p) || fr.verbs.is_verb_form(p) && !fr.lexicon.is_nominal(p)
+                        PREPOSITIONS.contains(&p)
+                            || ADVERBS_BETWEEN.contains(&p)
+                            || fr.verbs.is_verb_form(p) && !fr.lexicon.is_nominal(p)
                     });
                     if !after_verb_or_prep {
                         continue;
