@@ -574,8 +574,30 @@ const SUBJECTS_AND_CLITICS: &[&str] = &[
 ];
 
 const PREPOSITIONS: &[&str] = &[
-    "dans", "sur", "sous", "avec", "pour", "par", "chez", "vers", "entre", "contre", "devant", "derrière",
-    "après", "avant", "depuis", "pendant", "selon", "sans", "de", "à", "en", "malgré", "parmi", "durant",
+    "dans",
+    "sur",
+    "sous",
+    "avec",
+    "pour",
+    "par",
+    "chez",
+    "vers",
+    "entre",
+    "contre",
+    "devant",
+    "derrière",
+    "après",
+    "avant",
+    "depuis",
+    "pendant",
+    "selon",
+    "sans",
+    "de",
+    "à",
+    "en",
+    "malgré",
+    "parmi",
+    "durant",
 ];
 
 const NUMERAL_WORDS: &[&str] = &["cent", "mille", "vingt", "quatre", "un", "une", "deux", "trois"];
