@@ -26,16 +26,12 @@ jobs:
             echo "::error::$GITHUB_REF_NAME is not on master; releases are only built from master."
             exit 1
           fi
-      - name: Tag must match the crate version
+      - name: Tag must match the crate and extension versions
         id: version
         run: |
-          crate=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)
-          tag="${GITHUB_REF_NAME#v}"
-          if [ "$crate" != "$tag" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME does not match the version in Cargo.toml ($crate)."
-            exit 1
-          fi
-          echo "version=$tag" >> "$GITHUB_OUTPUT"
+          # Assigned first: a failure inside "echo $(…)" would not fail the step.
+          version=$(scripts/check-release-version.sh "$GITHUB_REF_NAME")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
   build:
     name: Build ${{ matrix.target }}

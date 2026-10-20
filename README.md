@@ -226,10 +226,12 @@ extension/firefox/     Firefox add-on (Manifest V3)
 
 ### Releasing
 
-Bump `version` in the root `Cargo.toml` (and `extension/firefox/manifest.json`), merge to `master`,
+Bump `version` in the root `Cargo.toml`, run `cargo check` to refresh `Cargo.lock`, set the same
+version in `extension/firefox/manifest.json` (without any `-rc` suffix), merge to `master`,
 then tag that commit:
 
 ```sh
+scripts/check-release-version.sh v0.2.0   # same check as CI
 git tag v0.2.0 && git push origin v0.2.0
 ```
 
