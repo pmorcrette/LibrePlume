@@ -26,6 +26,8 @@ fn french_errors() {
     expect(Fr, "Je vais mangé.", "FR_PARTICIPLE_INFINITIVE", "mangé", "manger");
     expect(Fr, "Si j'aurais su, je serais venu.", "FR_SI_CONDITIONAL", "aurais", "avais");
     expect(Fr, "Les chat dorment.", "FR_DET_NOUN_AGREEMENT", "chat", "chats");
+    expect(Fr, "Il a mangé les pomme.", "FR_DET_NOUN_AGREEMENT", "pomme", "pommes");
+    expect(Fr, "Je pense aux porte.", "FR_DET_NOUN_AGREEMENT", "porte", "portes");
     expect(Fr, "Le arbre est grand.", "FR_ELISION", "Le arbre", "L'arbre");
     expect(Fr, "Je pars si il pleut.", "FR_ELISION", "si il", "s'il");
     expect(Fr, "Je parle de le livre.", "FR_CONTRACTION", "de le", "du");

@@ -573,6 +573,11 @@ const SUBJECTS_AND_CLITICS: &[&str] = &[
     "s'", "qui", "ça", "cela", "à", "de", "d'", "pour", "sans", "faut",
 ];
 
+const PREPOSITIONS: &[&str] = &[
+    "dans", "sur", "sous", "avec", "pour", "par", "chez", "vers", "entre", "contre", "devant", "derrière",
+    "après", "avant", "depuis", "pendant", "selon", "sans", "de", "à", "en", "malgré", "parmi", "durant",
+];
+
 const NUMERAL_WORDS: &[&str] = &["cent", "mille", "vingt", "quatre", "un", "une", "deux", "trois"];
 
 fn pluralize(fr: &FrenchResources, w: &str) -> Option<String> {
@@ -627,9 +632,21 @@ fn det_noun_agreement(ctx: &Ctx<'_>, out: &mut Vec<Found>) {
             if c & class::PROPER != 0 || c & (class::SINGULAR | class::PLURAL) == 0 {
                 continue;
             }
-            // Words that are also verb forms are too ambiguous after "le/la/les".
-            if DET_PRONOUNS.contains(&det.as_str()) && fr.verbs.is_verb_form(&n) {
-                continue;
+            // "le/la/les" may be object pronouns: "Pierre les porte", "il veut les manger".
+            if DET_PRONOUNS.contains(&det.as_str()) {
+                let hits = fr.verbs.lookup(&n);
+                if hits.iter().any(|h| h.kind == FormKind::Infinitive) {
+                    continue;
+                }
+                if !hits.is_empty() {
+                    // As a determiner, it follows a verb, a preposition or starts the group.
+                    let after_verb_or_prep = prev.as_deref().is_none_or(|p| {
+                        PREPOSITIONS.contains(&p) || fr.verbs.is_verb_form(p) && !fr.lexicon.is_nominal(p)
+                    });
+                    if !after_verb_or_prep {
+                        continue;
+                    }
+                }
             }
             if plural_det && c & class::PLURAL == 0 {
                 let Some(p) = pluralize(fr, &n) else { continue };
