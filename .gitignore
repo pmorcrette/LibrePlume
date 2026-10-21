@@ -1,0 +1,6 @@
+/target
+/data
+*.zip
+*.xpi
+node_modules/
+.DS_Store

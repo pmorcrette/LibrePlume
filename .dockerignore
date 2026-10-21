@@ -1,0 +1,7 @@
+target
+data
+.git
+extension
+**/node_modules
+*.md
+!crates/**/*.md

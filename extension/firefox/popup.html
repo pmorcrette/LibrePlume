@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1><img src="icons/icon.svg" alt="">LibrePlume</h1>
+    <span class="status" id="status"></span>
+  </header>
+  <main>
+    <textarea id="text" rows="6" data-msg-placeholder="placeholder"></textarea>
+    <div class="row">
+      <button class="btn primary" id="check" data-msg="check"></button>
+      <button class="btn ghost" id="copy" data-msg="copy" hidden></button>
+      <span class="spacer"></span>
+      <span class="muted" id="count"></span>
+    </div>
+    <div id="issues" class="issues"></div>
+    <form class="row conj" id="conj">
+      <input type="text" id="verb" data-msg-placeholder="conjPlaceholder" autocomplete="off">
+      <button class="btn ghost" data-msg="conjugate"></button>
+    </form>
+  </main>
+  <footer>
+    <a href="#" id="check-field" data-msg="checkField"></a>
+    <a href="#" id="open-app" data-msg="openApp"></a>
+    <a href="#" id="options" data-msg="options"></a>
+  </footer>
+  <script src="common.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+body { width: 380px; }
+header { display: flex; align-items: center; justify-content: space-between; padding: .8rem 1rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+.status { font-size: .75rem; color: var(--text-muted); display: inline-flex; align-items: center; gap: .35rem; }
+.status::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: var(--text-muted); }
+.status.ok::before { background: var(--punctuation); }
+.status.err::before { background: var(--spelling); }
+main { padding: .9rem 1rem; display: grid; gap: .6rem; }
+textarea { resize: vertical; min-height: 7rem; font-family: var(--font-text); font-size: .95rem; line-height: 1.6; }
+.row { display: flex; gap: .5rem; align-items: center; }
+.spacer { flex: 1; }
+.issues { display: grid; gap: .4rem; max-height: 260px; overflow-y: auto; }
+.conj { border-top: 1px solid var(--border); padding-top: .7rem; }
+footer { display: flex; justify-content: space-between; gap: .75rem; flex-wrap: wrap; padding: .6rem 1rem; border-top: 1px solid var(--border); font-size: .8rem; }
+footer a { color: var(--accent); text-decoration: none; }

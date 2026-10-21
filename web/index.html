@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LibrePlume</title>
+  <meta name="description" content="Correcteur grammatical, orthographique, typographique et stylistique libre, avec conjugueur.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/css/app.css">
+  <script>
+    // Apply the last theme before first paint to avoid a flash.
+    try {
+      const cached = JSON.parse(localStorage.getItem('lp.themeVars') || 'null');
+      if (cached) {
+        for (const [k, v] of Object.entries(cached.variables)) document.documentElement.style.setProperty('--' + k, v);
+        document.documentElement.style.colorScheme = cached.dark ? 'dark' : 'light';
+      }
+    } catch (_) { /* storage unavailable */ }
+  </script>
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">Aller au contenu</a>
+  <header class="topbar">
+    <a class="brand" href="#/" aria-label="LibrePlume">
+      <svg class="brand-logo" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-plume"/></svg>
+      <span class="brand-name">Libre<strong>Plume</strong></span>
+    </a>
+    <nav class="tabs" aria-label="Navigation">
+      <a href="#/" data-route="check" data-i18n="nav.check">Correcteur</a>
+      <a href="#/conjugate" data-route="conjugate" data-i18n="nav.conjugate">Conjugueur</a>
+      <a href="#/synonyms" data-route="synonyms" data-i18n="nav.synonyms">Synonymes</a>
+      <a href="#/rules" data-route="rules" data-i18n="nav.rules">Réglages</a>
+      <a href="#/themes" data-route="themes" data-i18n="nav.themes">Thèmes</a>
+      <a href="#/api" data-route="api" data-i18n="nav.api">API &amp; MCP</a>
+    </nav>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="ui-lang" type="button" aria-label="Interface language" title="Langue de l’interface">FR</button>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Changer de thème" data-i18n-title="theme.quick">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-palette"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- Checker -->
+    <section class="view" data-view="check">
+      <div class="checker">
+        <div class="card editor-card">
+          <div class="toolbar">
+            <label class="select">
+              <span class="sr-only" data-i18n="check.language">Langue du texte</span>
+              <select id="check-lang">
+                <option value="auto" data-i18n="lang.auto">Détection auto</option>
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+              </select>
+            </label>
+            <span class="detected" id="detected-lang" aria-live="polite"></span>
+            <span class="spacer"></span>
+            <button class="btn ghost" id="btn-copy" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-copy"/></svg><span data-i18n="check.copy">Copier</span>
+            </button>
+            <button class="btn ghost" id="btn-clear" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-trash"/></svg><span data-i18n="check.clear">Effacer</span>
+            </button>
+            <button class="btn primary" id="btn-fix-all" type="button" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wand"/></svg><span data-i18n="check.fixAll">Tout corriger</span>
+            </button>
+          </div>
+          <div class="editor" id="editor">
+            <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+            <textarea id="input" spellcheck="false" autocomplete="off" autocapitalize="sentences"
+              data-i18n-placeholder="check.placeholder" placeholder="Écrivez ou collez votre texte ici…"></textarea>
+          </div>
+          <footer class="editor-footer">
+            <span id="stat-words">0 mot</span>
+            <span id="stat-sentences"></span>
+            <span id="stat-reading"></span>
+            <span class="spacer"></span>
+            <span class="status" id="check-status" aria-live="polite"></span>
+          </footer>
+        </div>
+
+        <aside class="card issues-card" aria-labelledby="issues-title">
+          <div class="score">
+            <svg class="ring" viewBox="0 0 44 44" aria-hidden="true">
+              <circle class="ring-bg" cx="22" cy="22" r="19"/>
+              <circle class="ring-fg" id="score-ring" cx="22" cy="22" r="19"/>
+            </svg>
+            <div>
+              <h2 id="issues-title" data-i18n="check.issues">Suggestions</h2>
+              <p class="muted" id="score-label" data-i18n="check.empty">Votre texte apparaîtra ici, analysé au fil de la frappe.</p>
+            </div>
+          </div>
+          <div class="chips" id="category-filter" role="group" aria-label="Filtrer par catégorie"></div>
+          <div id="syn-card" aria-live="polite"></div>
+          <ol class="issues" id="issues" aria-live="polite"></ol>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Conjugator -->
+    <section class="view" data-view="conjugate" hidden>
+      <form class="card conj-search" id="conj-form" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-search"/></svg>
+        <input id="conj-input" type="search" required autocomplete="off" spellcheck="false"
+          data-i18n-placeholder="conj.placeholder" placeholder="Un verbe à l’infinitif : venir, s’asseoir, to go…" aria-label="Verbe">
+        <select id="conj-lang" aria-label="Langue">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+        <button class="btn primary" type="submit" data-i18n="conj.submit">Conjuguer</button>
+      </form>
+      <div class="conj-suggestions" id="conj-examples"></div>
+      <div id="conj-result" aria-live="polite"></div>
+    </section>
+
+    <!-- Synonyms -->
+    <section class="view" data-view="synonyms" hidden>
+      <form class="card conj-search" id="syn-form" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-search"/></svg>
+        <input id="syn-input" type="search" required autocomplete="off" spellcheck="false"
+          data-i18n-placeholder="syn.placeholder" placeholder="Un mot : rapide, beau, travail…" aria-label="Mot">
+        <select id="syn-lang" aria-label="Langue">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+        <button class="btn primary" type="submit" data-i18n="syn.submit">Chercher</button>
+      </form>
+      <div class="conj-suggestions" id="syn-examples"></div>
+      <div id="syn-result" aria-live="polite"></div>
+    </section>
+
+    <!-- Rules & settings -->
+    <section class="view" data-view="rules" hidden>
+      <div class="settings-grid">
+        <div class="card">
+          <h2 data-i18n="settings.title">Réglages généraux</h2>
+          <p class="muted" data-i18n="settings.shared">Ces réglages s’appliquent à tous les utilisateurs de ce serveur.</p>
+          <div class="field">
+            <label for="set-lang" data-i18n="settings.defaultLang">Langue par défaut</label>
+            <select id="set-lang">
+              <option value="auto" data-i18n="lang.auto">Détection auto</option>
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="set-maxwords"><span data-i18n="settings.maxWords">Longueur maximale d’une phrase</span> <output id="set-maxwords-out"></output></label>
+            <input id="set-maxwords" type="range" min="0" max="80" step="5">
+          </div>
+          <h3 data-i18n="settings.categories">Catégories vérifiées</h3>
+          <div class="toggle-list" id="set-categories"></div>
+        </div>
+        <div class="card">
+          <h2 data-i18n="dict.title">Dictionnaire personnel</h2>
+          <p class="muted" data-i18n="dict.help">Noms propres, jargon, néologismes : ces mots ne seront plus signalés.</p>
+          <form class="inline-form" id="dict-form">
+            <input id="dict-input" required autocomplete="off" data-i18n-placeholder="dict.placeholder" placeholder="Ajouter un mot…" aria-label="Mot">
+            <button class="btn primary" type="submit" data-i18n="dict.add">Ajouter</button>
+          </form>
+          <ul class="word-cloud" id="dict-words"></ul>
+        </div>
+        <div class="card wide">
+          <div class="card-head">
+            <h2 data-i18n="rules.title">Règles</h2>
+            <input id="rules-filter" type="search" data-i18n-placeholder="rules.filter" placeholder="Filtrer les règles…" aria-label="Filtrer">
+            <select id="rules-lang" aria-label="Langue">
+              <option value="" data-i18n="rules.allLangs">Toutes les langues</option>
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div id="rules-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Themes -->
+    <section class="view" data-view="themes" hidden>
+      <div class="card">
+        <div class="card-head">
+          <h2 data-i18n="themes.title">Thèmes</h2>
+          <label class="check"><input type="checkbox" id="theme-auto"> <span data-i18n="themes.auto">Suivre le mode clair/sombre du système</span></label>
+        </div>
+        <div class="theme-grid" id="theme-grid"></div>
+      </div>
+      <div class="card theme-editor">
+        <div class="card-head">
+          <h2 data-i18n="themes.editor">Créer un thème</h2>
+          <span class="spacer"></span>
+          <button class="btn ghost" type="button" id="theme-import" data-i18n="themes.import">Importer</button>
+          <button class="btn ghost" type="button" id="theme-export" data-i18n="themes.export">Exporter</button>
+        </div>
+        <div class="editor-layout">
+          <form id="theme-form" class="theme-form">
+            <div class="field-row">
+              <div class="field">
+                <label for="theme-name" data-i18n="themes.name">Nom</label>
+                <input id="theme-name" required maxlength="60" value="Mon thème">
+              </div>
+              <div class="field">
+                <label for="theme-base" data-i18n="themes.base">À partir de</label>
+                <select id="theme-base"></select>
+              </div>
+            </div>
+            <div class="color-grid" id="theme-colors"></div>
+            <div class="field-row">
+              <div class="field">
+                <label for="theme-font-text" data-i18n="themes.fontText">Police du texte</label>
+                <select id="theme-font-text"></select>
+              </div>
+              <div class="field">
+                <label for="theme-font-ui" data-i18n="themes.fontUi">Police de l’interface</label>
+                <select id="theme-font-ui"></select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="theme-size"><span data-i18n="themes.size">Taille du texte</span> <output id="theme-size-out"></output></label>
+                <input id="theme-size" type="range" min="0.875" max="1.625" step="0.0625">
+              </div>
+              <div class="field">
+                <label for="theme-radius"><span data-i18n="themes.radius">Arrondis</span> <output id="theme-radius-out"></output></label>
+                <input id="theme-radius" type="range" min="0" max="28" step="1">
+              </div>
+            </div>
+            <label class="check"><input type="checkbox" id="theme-dark"> <span data-i18n="themes.dark">Thème sombre</span></label>
+            <div class="form-actions">
+              <button class="btn ghost" type="button" id="theme-preview-btn" data-i18n="themes.try">Essayer</button>
+              <button class="btn primary" type="submit" data-i18n="themes.save">Enregistrer</button>
+            </div>
+          </form>
+          <div class="theme-live" id="theme-live" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- API & MCP -->
+    <section class="view" data-view="api" hidden>
+      <div class="docs" id="docs"></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="token-dialog">
+    <form method="dialog" class="dialog-body">
+      <h2 data-i18n="token.title">Jeton d’accès requis</h2>
+      <p class="muted" data-i18n="token.help">Ce serveur protège les modifications par un jeton (LIBREPLUME_TOKEN).</p>
+      <input id="token-input" type="password" autocomplete="current-password" aria-label="Jeton">
+      <div class="form-actions">
+        <button class="btn ghost" value="cancel" data-i18n="cancel">Annuler</button>
+        <button class="btn primary" value="ok" data-i18n="token.save">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="icon-plume" viewBox="0 0 32 32"><path fill="currentColor" d="M27.6 3.2c-6.9.4-13 3.4-16.9 8.6-2.6 3.4-4 7.4-4.3 11.4l-2.2 2.2a1 1 0 1 0 1.4 1.4l2.2-2.2c4-.3 8-1.7 11.4-4.3 1-.8 2-1.6 2.8-2.6l-4.6-.5 6.2-1.9c1.6-2.6 2.8-5.5 3.4-8.5l-4.8.6 5.2-2.6c.1-.4.1-.8.2-1.2a.6.6 0 0 0 0-.4Zm-15 15.4 6.9-6.9a1 1 0 0 0-1.4-1.4l-6.9 6.9a1 1 0 0 0 1.4 1.4Z"/></symbol>
+    <symbol id="icon-palette" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.9 1.4-1.8-.4-1 .3-2.2 1.4-2.2H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10Z"/><circle cx="7.5" cy="11" r="1.3" fill="currentColor"/><circle cx="10" cy="7" r="1.3" fill="currentColor"/><circle cx="15" cy="7.2" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v11H9zM5 15V4h10"/></symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13"/></symbol>
+    <symbol id="icon-wand" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m4 20 10-10m2-6v3m-1.5-1.5h3M19 9v2m-1-1h2M13.5 4.5l1 1M10 6v2m-1-1h2"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="m20 20-4.5-4.5M17 10.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  </svg>
+</body>
+</html>

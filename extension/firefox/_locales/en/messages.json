@@ -1,0 +1,151 @@
+{
+  "extName": {
+    "message": "LibrePlume — proofreader"
+  },
+  "extDescription": {
+    "message": "Free grammar, spelling, typography and style checker, connected to your own LibrePlume server."
+  },
+  "commandCheck": {
+    "message": "Check the active text field"
+  },
+  "menuCheck": {
+    "message": "Check “%s” with LibrePlume"
+  },
+  "menuConjugate": {
+    "message": "Conjugate “%s”"
+  },
+  "issues": {
+    "message": "suggestions"
+  },
+  "noIssues": {
+    "message": "No mistakes found"
+  },
+  "checking": {
+    "message": "Checking…"
+  },
+  "serverError": {
+    "message": "LibrePlume server unreachable. Check its address in the options."
+  },
+  "ignore": {
+    "message": "Ignore"
+  },
+  "addWord": {
+    "message": "Add to dictionary"
+  },
+  "remove": {
+    "message": "remove"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "fixAll": {
+    "message": "Fix all"
+  },
+  "check": {
+    "message": "Check"
+  },
+  "copy": {
+    "message": "Copy"
+  },
+  "copied": {
+    "message": "Copied!"
+  },
+  "placeholder": {
+    "message": "Paste a text to check…"
+  },
+  "openApp": {
+    "message": "Open LibrePlume"
+  },
+  "conjugate": {
+    "message": "Conjugate"
+  },
+  "conjPlaceholder": {
+    "message": "Verb to conjugate"
+  },
+  "options": {
+    "message": "Options"
+  },
+  "connected": {
+    "message": "Connected to"
+  },
+  "optTitle": {
+    "message": "LibrePlume options"
+  },
+  "optServer": {
+    "message": "Server address"
+  },
+  "optServerHelp": {
+    "message": "The address of your LibrePlume instance, e.g. http://localhost:8080."
+  },
+  "optToken": {
+    "message": "Access token (optional)"
+  },
+  "optTokenHelp": {
+    "message": "Only needed if the server sets LIBREPLUME_TOKEN and you add words to the dictionary."
+  },
+  "optLanguage": {
+    "message": "Text language"
+  },
+  "optAuto": {
+    "message": "Automatic detection"
+  },
+  "optAutoCheck": {
+    "message": "Check automatically while typing"
+  },
+  "optStyle": {
+    "message": "Show style suggestions"
+  },
+  "optExcluded": {
+    "message": "Excluded sites (one domain per line)"
+  },
+  "optTest": {
+    "message": "Test connection"
+  },
+  "optSave": {
+    "message": "Save"
+  },
+  "optSaved": {
+    "message": "Options saved"
+  },
+  "optPermission": {
+    "message": "Allow access to websites"
+  },
+  "optPermissionHelp": {
+    "message": "Firefox asks for your consent so that LibrePlume can read text fields on pages and reach your server."
+  },
+  "optOk": {
+    "message": "Connected: LibrePlume $VERSION$",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "optPrivacy": {
+    "message": "Texts are only sent to the server above, never anywhere else."
+  },
+  "cat_spelling": {
+    "message": "Spelling"
+  },
+  "cat_grammar": {
+    "message": "Grammar"
+  },
+  "cat_conjugation": {
+    "message": "Conjugation"
+  },
+  "cat_typography": {
+    "message": "Typography"
+  },
+  "cat_punctuation": {
+    "message": "Punctuation"
+  },
+  "cat_style": {
+    "message": "Style"
+  },
+  "menuSynonyms": {
+    "message": "Synonyms of “%s”"
+  },
+  "checkField": {
+    "message": "Check the active field"
+  }
+}
