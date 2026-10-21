@@ -27,15 +27,20 @@
     browser.storage.local.get('theme').then((r) => { theme = r.theme || null; });
     document.addEventListener('focusin', onFocus, true);
     document.addEventListener('input', onInput, true);
+    // A field may already be focused when the script starts (e.g. a compose window opened with the cursor in it).
+    const focused = editableRoot(deepActiveElement());
+    if (focused) onFocus({ composedPath: () => [focused], target: focused });
     window.addEventListener('scroll', schedulePosition, true);
     window.addEventListener('resize', schedulePosition);
   }).catch(() => {});
 
   browser.runtime.onMessage.addListener((message) => {
     if (message?.type === 'checkActiveField') {
-      const field = editableRoot(document.activeElement);
+      // Explicit request: check the focused field even if heuristics would skip it.
+      const field = editableRoot(deepActiveElement(), { force: true });
       if (field) {
         active = field;
+        watch(field);
         check(field).then(() => openPanel());
       }
     } else if (message?.type === 'checkSelection') {
@@ -44,22 +49,56 @@
     }
   });
 
-  /** The editable element to check for a focused node, or null. */
-  function editableRoot(node) {
-    if (!(node instanceof HTMLElement)) return null;
-    if (node.getAttribute('spellcheck') === 'false') return null;
-    if (node instanceof HTMLTextAreaElement) return node.readOnly || node.disabled ? null : node;
+  /** Code editors, where prose checking makes no sense. */
+  const CODE_EDITORS = '.cm-editor, .CodeMirror, .monaco-editor, .ace_editor, .code-editor, [role="code"]';
+
+  /** The focused element, looking inside shadow roots. */
+  function deepActiveElement() {
+    let el = document.activeElement;
+    while (el?.shadowRoot?.activeElement) el = el.shadowRoot.activeElement;
+    return el;
+  }
+
+  /** The element that really received an event, inside open shadow roots. */
+  function eventTarget(e) {
+    return (e.composedPath && e.composedPath()[0]) || e.target;
+  }
+
+  /**
+   * The editable element to check for a focused node, or null.
+   *
+   * Rich mail editors (Outlook, …) often set spellcheck="false" because they ship their own
+   * proofing, so that attribute is only honoured on plain text areas and code editors.
+   */
+  function editableRoot(node, { force = false } = {}) {
+    // nodeType rather than instanceof: elements of other frames come from another realm.
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) return null;
+    if (node.tagName === 'TEXTAREA') {
+      if (node.readOnly || node.disabled) return null;
+      return force || node.getAttribute('spellcheck') !== 'false' ? node : null;
+    }
     if (node.isContentEditable) {
       let root = node;
       while (root.parentElement && root.parentElement.isContentEditable) root = root.parentElement;
-      return root.getAttribute('spellcheck') === 'false' ? null : root;
+      if (!force && root.closest(CODE_EDITORS)) return null;
+      return root;
     }
     return null;
   }
 
+  /** Some editors insert text themselves without firing input events: watch the DOM too. */
+  const watched = new WeakSet();
+  function watch(field) {
+    if (field.tagName === 'TEXTAREA' || watched.has(field)) return;
+    watched.add(field);
+    new MutationObserver(() => changed(field, false)).observe(field, { childList: true, subtree: true, characterData: true });
+  }
+
   function onFocus(e) {
-    const field = editableRoot(e.target);
-    if (!field || field === active) return;
+    const field = editableRoot(eventTarget(e));
+    if (!field) return;
+    watch(field);
+    if (field === active) return;
     active = field;
     closePanel();
     const st = state.get(field);
@@ -69,10 +108,16 @@
   }
 
   function onInput(e) {
-    const field = editableRoot(e.target);
-    if (!field) return;
-    active = field;
+    const field = editableRoot(eventTarget(e));
+    if (field) changed(field, true);
+  }
+
+  /** Called whenever the text of a field may have changed (typed, or modified by the page). */
+  function changed(field, typed) {
+    if (!settings) return;
+    if (typed) active = field;
     const st = ensureState(field);
+    if (textOf(field).text === st.text) return;
     shiftMatches(field, st);
     if (!settings.autoCheck) return;
     clearTimeout(st.timer);
@@ -92,7 +137,7 @@
 
   /** Text of a field and, for rich editors, the text nodes it is made of. */
   function textOf(field) {
-    if (field instanceof HTMLTextAreaElement) return { text: field.value, segments: null };
+    if (field.tagName === 'TEXTAREA') return { text: field.value, segments: null };
     const segments = [];
     let text = '';
     const newline = () => { if (text && !text.endsWith('\n')) text += '\n'; };
@@ -194,7 +239,7 @@
   // ------------------------------------------------------------------ highlights (rich editors)
 
   function paintHighlights(field, st) {
-    if (!window.CSS?.highlights || field instanceof HTMLTextAreaElement) return;
+    if (!window.CSS?.highlights || field.tagName === 'TEXTAREA') return;
     const groups = Object.fromEntries(CATEGORIES.map((c) => [c, []]));
     for (const m of visible(st)) {
       const r = rangeFor(field, m.offset, m.length);
@@ -417,7 +462,7 @@
   /** Replaces [offset, offset+length) through editing commands so that undo works. */
   function replaceIn(field, offset, length, replacement) {
     field.focus({ preventScroll: true });
-    if (field instanceof HTMLTextAreaElement) {
+    if (field.tagName === 'TEXTAREA') {
       field.setSelectionRange(offset, offset + length);
       if (!document.execCommand('insertText', false, replacement)) {
         field.setRangeText(replacement, offset, offset + length, 'end');

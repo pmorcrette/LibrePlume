@@ -10,5 +10,5 @@ textarea { resize: vertical; min-height: 7rem; font-family: var(--font-text); fo
 .spacer { flex: 1; }
 .issues { display: grid; gap: .4rem; max-height: 260px; overflow-y: auto; }
 .conj { border-top: 1px solid var(--border); padding-top: .7rem; }
-footer { display: flex; justify-content: space-between; padding: .6rem 1rem; border-top: 1px solid var(--border); font-size: .8rem; }
+footer { display: flex; justify-content: space-between; gap: .75rem; flex-wrap: wrap; padding: .6rem 1rem; border-top: 1px solid var(--border); font-size: .8rem; }
 footer a { color: var(--accent); text-decoration: none; }

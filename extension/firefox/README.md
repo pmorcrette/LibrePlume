@@ -12,7 +12,11 @@ Checks what you type in text areas and rich text editors on any website, using
 - Inline underlines in rich text editors (Firefox 140+ with the CSS Highlight API).
 - Right-click a selection: *Check with LibrePlume*, *Conjugate* or *Synonyms*.
 - Toolbar popup to check any pasted text and copy the corrected version.
-- <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> checks the focused field on demand.
+- <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd>, or **Check the active field** in the popup, checks the
+  focused field on demand, even one the automatic detection skipped.
+- Works with webmail editors that disable the browser's own spell checker or handle typing
+  themselves (Outlook on the web, …), with editors inside shadow DOM or frames, and stays out of
+  code editors (CodeMirror, Monaco, Ace).
 - Follows the server's default theme, in French or English.
 
 ## Install

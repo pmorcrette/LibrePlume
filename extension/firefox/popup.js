@@ -31,6 +31,12 @@ async function init() {
     const verb = $('verb').value.trim();
     if (verb) browser.runtime.sendMessage({ type: 'openApp', hash: `#/conjugate/${encodeURIComponent(verb)}` }).then(() => window.close());
   });
+  $('check-field').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+    if (tab) await browser.tabs.sendMessage(tab.id, { type: 'checkActiveField' }).catch(() => {});
+    window.close();
+  });
   $('open-app').addEventListener('click', (e) => { e.preventDefault(); browser.runtime.sendMessage({ type: 'openApp' }).then(() => window.close()); });
   $('options').addEventListener('click', (e) => { e.preventDefault(); browser.runtime.openOptionsPage(); window.close(); });
 }

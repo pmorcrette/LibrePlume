@@ -15,14 +15,25 @@
       "id": "libreplume@libreplume.org",
       "strict_min_version": "128.0",
       "data_collection_permissions": {
-        "required": ["websiteContent"]
+        "required": [
+          "websiteContent"
+        ]
       }
     }
   },
-  "permissions": ["storage", "contextMenus", "activeTab"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "background": {
-    "scripts": ["common.js", "background.js"]
+    "scripts": [
+      "common.js",
+      "background.js"
+    ]
   },
   "action": {
     "default_title": "LibrePlume",
@@ -35,16 +46,25 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["content.css"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
       "all_frames": true,
-      "run_at": "document_idle"
+      "run_at": "document_idle",
+      "match_origin_as_fallback": true
     }
   ],
   "commands": {
     "check-field": {
-      "suggested_key": { "default": "Alt+Shift+L" },
+      "suggested_key": {
+        "default": "Alt+Shift+L"
+      },
       "description": "__MSG_commandCheck__"
     }
   }

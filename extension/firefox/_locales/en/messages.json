@@ -144,5 +144,8 @@
   },
   "menuSynonyms": {
     "message": "Synonyms of “%s”"
+  },
+  "checkField": {
+    "message": "Check the active field"
   }
 }
